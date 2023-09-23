@@ -1,0 +1,29 @@
+{
+  "name": "@iamnnort/request",
+  "version": "1.1.0",
+  "description": "Universal request module for node.js applications.",
+  "main": "src/index.js",
+  "scripts": {
+    "publish": "npm publish --access=public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamnnort/request.git"
+  },
+  "author": "Nort Red",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iamnnort/request/issues"
+  },
+  "homepage": "https://github.com/iamnnort/request#readme",
+  "keywords": [],
+  "dependencies": {
+    "axios": "^1.5.0",
+    "debug": "^4.3.4"
+  },
+  "devDependencies": {
+    "path": "^0.12.7",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
