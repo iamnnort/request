@@ -1,4 +1,4 @@
-const config = {
+export const config = {
   methods: {
     GET: "get",
     POST: "post",
@@ -6,5 +6,3 @@ const config = {
     DELETE: "delete",
   },
 };
-
-module.exports.config = config;
