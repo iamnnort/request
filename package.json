@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "keywords": [
     "request",
@@ -19,8 +19,7 @@
   "scripts": {
     "start": "yarn ts-node src/index",
     "build": "tsup",
-    "test": "jest --passWithNoTests",
-    "deploy": "yarn build && yarn test"
+    "test": "jest --passWithNoTests"
   },
   "repository": {
     "type": "git",
