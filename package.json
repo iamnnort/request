@@ -1,9 +1,14 @@
 {
   "name": "@iamnnort/request",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "keywords": [
-    "request"
+    "request",
+    "fetch",
+    "xhr",
+    "http",
+    "ajax",
+    "promise"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
