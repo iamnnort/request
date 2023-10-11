@@ -3,70 +3,56 @@ import qs from "qs";
 import { config } from "./config";
 import { BaseRequestConfig, RequestConfig } from "./index.types";
 
-export const request = (baseRequestConfig: BaseRequestConfig) => {
-  return <T>(requestConfig: RequestConfig) => {
+export const request = (baseRequestConfig: BaseRequestConfig = {}) => {
+  const { debug, serializer, ...restBaseRequestConfig } = baseRequestConfig;
+
+  return <T>(requestConfig: RequestConfig = {}) => {
     const handleSuccess = (response: AxiosResponse<T>) => {
       return response.data;
     };
 
     const handleError = (error: AxiosError) => {
-      if (baseRequestConfig.debug) {
+      if (debug) {
         console.log("Error:", error);
       }
 
       throw error.response?.data || error.response || new Error(error.message);
     };
 
-    const getConfig = () => {
-      const baseUrlParts = [];
-      const urlParts = [];
+    const withUrlConfig = (config: BaseRequestConfig) => {
+      const url = [
+        restBaseRequestConfig.baseUrl,
+        restBaseRequestConfig.url,
+        requestConfig.baseUrl,
+        requestConfig.url,
+      ]
+        .filter((_) => _)
+        .join("/");
 
-      if (baseRequestConfig.baseURL) {
-        baseUrlParts.push(baseRequestConfig.baseURL);
-      }
-
-      if (baseRequestConfig.url) {
-        baseUrlParts.push(baseRequestConfig.url);
-      }
-
-      const baseUrl = baseUrlParts.join("/").replace("//", "/");
-
-      if (requestConfig.baseURL) {
-        urlParts.push(requestConfig.baseURL);
-      }
-
-      if (requestConfig.url) {
-        urlParts.push(requestConfig.url);
-      }
-
-      const url = urlParts.join("/").replace("//", "/");
-
-      const config: RequestConfig = {
-        ...baseRequestConfig,
-        ...requestConfig,
-        baseURL: baseUrl,
+      return {
+        ...config,
         url,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          ...baseRequestConfig.headers,
-          ...requestConfig.headers,
-        },
-        paramsSerializer: (params) => {
-          return qs.stringify(params, {
-            arrayFormat: baseRequestConfig.serializer?.array,
-          });
-        },
       };
-
-      if (baseRequestConfig.debug) {
-        console.log("Config:", config);
-      }
-
-      return config;
     };
 
-    return axios.request(getConfig()).then(handleSuccess).catch(handleError);
+    return axios
+      .request(
+        withUrlConfig({
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            ...restBaseRequestConfig.headers,
+            ...requestConfig.headers,
+          },
+          paramsSerializer: (params) => {
+            return qs.stringify(params, {
+              arrayFormat: serializer?.array,
+            });
+          },
+        })
+      )
+      .then(handleSuccess)
+      .catch(handleError);
   };
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "keywords": [
     "request",
@@ -17,7 +17,7 @@
     "dist"
   ],
   "scripts": {
-    "start": "yarn ts-node src/index",
+    "start": "yarn ts-node ./examples/simple",
     "build": "tsup",
     "test": "jest --passWithNoTests"
   },
