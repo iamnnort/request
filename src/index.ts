@@ -18,15 +18,18 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
     };
 
     const getConfig = () => {
+      const baseUrlParts = [];
       const urlParts = [];
 
       if (baseRequestConfig.baseURL) {
-        urlParts.push(baseRequestConfig.baseURL);
+        baseUrlParts.push(baseRequestConfig.baseURL);
       }
 
       if (baseRequestConfig.url) {
-        urlParts.push(baseRequestConfig.url);
+        baseUrlParts.push(baseRequestConfig.url);
       }
+
+      const baseUrl = baseUrlParts.join("/").replace("//", "/");
 
       if (requestConfig.baseURL) {
         urlParts.push(requestConfig.baseURL);
@@ -41,7 +44,7 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
       const config: RequestConfig = {
         ...baseRequestConfig,
         ...requestConfig,
-        baseURL: undefined,
+        baseURL: baseUrl,
         url,
         headers: {
           Accept: "application/json",
