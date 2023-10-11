@@ -41,7 +41,7 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
       const config: RequestConfig = {
         ...baseRequestConfig,
         ...requestConfig,
-        baseURL: "",
+        baseURL: undefined,
         url,
         headers: {
           Accept: "application/json",
