@@ -3,8 +3,6 @@ import qs from "qs";
 import { config } from "./config";
 import { BaseRequestConfig, RequestConfig } from "./index.types";
 
-export const methods = config.methods;
-
 export const request = (baseRequestConfig: BaseRequestConfig) => {
   return <T>(requestConfig: RequestConfig) => {
     const handleSuccess = (response: AxiosResponse<T>) => {
@@ -35,3 +33,8 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
       .catch(handleError);
   };
 };
+
+export const methods = config.methods;
+export const statuses = config.statuses;
+
+export type { BaseRequestConfig, RequestConfig } from "./index.types";

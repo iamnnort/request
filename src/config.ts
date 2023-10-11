@@ -5,4 +5,8 @@ export const config = {
     PUT: "put",
     DELETE: "delete",
   },
+  statuses: {
+    OK: 200,
+    UNAUTHORIZED: 401,
+  },
 };
