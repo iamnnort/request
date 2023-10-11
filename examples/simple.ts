@@ -2,7 +2,9 @@ import { methods, request } from "../src";
 
 const runSimple = async () => {
   const req = request({
-    baseUrl: "http://127.0.0.1:3001",
+    debug: true,
+    logger: true,
+    baseUrl: "http://127.0.0.1:3000",
   });
 
   const users = await req({

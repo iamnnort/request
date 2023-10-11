@@ -14,7 +14,7 @@ yarn install @iamnnort/request
 import { request, methods } from "@iamnnort/request";
 
 const req = request({
-  baseURL: "...",
+  baseUrl: "...",
 });
 
 const data = await req({
@@ -27,8 +27,16 @@ const data = await req({
 
 | Parameter          | Description                                                                |
 | ------------------ | -------------------------------------------------------------------------- |
-| `serializer`       | Parameter serializer configuration                                         |
+| `baseUrl`          | Main part of the server URL that will be used for the request              |
+| `url`              | Server URL that will be used for the request                               |
+| `method`           | Request method to be used when making the request                          |
+| `params`           | URL parameters to be sent with the request                                 |
+| `data`             | Data to be sent as the request body                                        |
+| `headers`          | Custom headers to be sent                                                  |
+| `serializer`       | Config that allows you to customize serializing                            |
 | `serializer.array` | Array element separator (`"indices"`, `"brackets"`, `"repeat"`, `"comma"`) |
+| `logger`           | Enable a logger                                                            |
+| `debug`            | Enable a debug mode                                                        |
 
 ## License
 

@@ -1,58 +1,16 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import qs from "qs";
+import axios from "axios";
 import { config } from "./config";
 import { BaseRequestConfig, RequestConfig } from "./index.types";
+import { requestHelper } from "./helpers/request";
 
 export const request = (baseRequestConfig: BaseRequestConfig = {}) => {
-  const { debug, serializer, ...restBaseRequestConfig } = baseRequestConfig;
-
   return <T>(requestConfig: RequestConfig = {}) => {
-    const handleSuccess = (response: AxiosResponse<T>) => {
-      return response.data;
-    };
-
-    const handleError = (error: AxiosError) => {
-      if (debug) {
-        console.log("Error:", error);
-      }
-
-      throw error.response?.data || error.response || new Error(error.message);
-    };
-
-    const withUrlConfig = (config: BaseRequestConfig) => {
-      const url = [
-        restBaseRequestConfig.baseUrl,
-        restBaseRequestConfig.url,
-        requestConfig.baseUrl,
-        requestConfig.url,
-      ]
-        .filter((_) => _)
-        .join("/");
-
-      return {
-        ...config,
-        url,
-      };
-    };
-
     return axios
       .request(
-        withUrlConfig({
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            ...restBaseRequestConfig.headers,
-            ...requestConfig.headers,
-          },
-          paramsSerializer: (params) => {
-            return qs.stringify(params, {
-              arrayFormat: serializer?.array,
-            });
-          },
-        })
+        requestHelper.makeRequestConfig(baseRequestConfig, requestConfig)
       )
-      .then(handleSuccess)
-      .catch(handleError);
+      .then(requestHelper.makeSuccessHandler<T>(baseRequestConfig))
+      .catch(requestHelper.makeErrorHandler(baseRequestConfig));
   };
 };
 
