@@ -10,10 +10,14 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
     };
 
     const handleError = (error: AxiosError) => {
+      if (baseRequestConfig.debug) {
+        console.log("Error:", error);
+      }
+
       throw error.response?.data || error.response || new Error(error.message);
     };
 
-    const getConfig = (): RequestConfig => {
+    const getConfig = () => {
       const urlParts = [];
 
       if (baseRequestConfig.baseURL) {
@@ -34,7 +38,7 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
 
       const url = urlParts.join("/").replace("//", "/");
 
-      return {
+      const config: RequestConfig = {
         ...baseRequestConfig,
         ...requestConfig,
         baseURL: "",
@@ -51,6 +55,12 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
           });
         },
       };
+
+      if (baseRequestConfig.debug) {
+        console.log("Config:", config);
+      }
+
+      return config;
     };
 
     return axios.request(getConfig()).then(handleSuccess).catch(handleError);
@@ -62,57 +72,60 @@ export const makeDataSource = <T, SP, SR, C, U>(
 ) => {
   const dataSourceRequest = request(baseRequestConfig);
 
-  abstract class DataSource {
-    public static url: string;
-
-    public static async search(request: SP = {} as SP) {
-      return dataSourceRequest<SR>({
-        method: methods.GET,
-        ...request,
-      });
-    }
-
-    public static async get(id: any, request: SP = {} as SP) {
-      return dataSourceRequest<T>({
-        method: methods.GET,
-        url: `/${id}`,
-        ...request,
-      });
-    }
-
-    public static async create(request: C = {} as C) {
-      return dataSourceRequest<T>({
-        method: methods.POST,
-        ...request,
-      });
-    }
-
-    public static async bulkCreate(request: C = {} as C) {
-      return dataSourceRequest<T>({
-        method: methods.POST,
-        url: "/bulk",
-        ...request,
-      });
-    }
-
-    public static async update(id: any, request: U = {} as U) {
-      return dataSourceRequest<T>({
-        method: methods.PUT,
-        url: `/${id}`,
-        ...request,
-      });
-    }
-
-    public static async remove(id: any, request: SP = {} as SP) {
-      return dataSourceRequest<T>({
-        method: methods.DELETE,
-        url: `/${id}`,
-        ...request,
-      });
-    }
+  async function search(request: SP = {} as SP) {
+    return dataSourceRequest<SR>({
+      method: methods.GET,
+      ...request,
+    });
   }
 
-  return DataSource;
+  async function get(id: any, request: SP = {} as SP) {
+    return dataSourceRequest<T>({
+      method: methods.GET,
+      url: `/${id}`,
+      ...request,
+    });
+  }
+
+  async function create(request: C = {} as C) {
+    return dataSourceRequest<T>({
+      method: methods.POST,
+      ...request,
+    });
+  }
+
+  async function bulkCreate(request: C = {} as C) {
+    return dataSourceRequest<T>({
+      method: methods.POST,
+      url: "/bulk",
+      ...request,
+    });
+  }
+
+  async function update(id: any, request: U = {} as U) {
+    return dataSourceRequest<T>({
+      method: methods.PUT,
+      url: `/${id}`,
+      ...request,
+    });
+  }
+
+  async function remove(id: any, request: SP = {} as SP) {
+    return dataSourceRequest<T>({
+      method: methods.DELETE,
+      url: `/${id}`,
+      ...request,
+    });
+  }
+
+  return {
+    search,
+    get,
+    create,
+    bulkCreate,
+    update,
+    remove,
+  };
 };
 
 export const methods = config.methods;
