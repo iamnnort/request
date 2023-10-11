@@ -13,24 +13,47 @@ export const request = (baseRequestConfig: BaseRequestConfig) => {
       throw error.response?.data || error.response || new Error(error.message);
     };
 
-    const { serializer, ...axiosConfig } = baseRequestConfig;
-    const axiosRequest = axios.create(axiosConfig);
+    const getConfig = (): RequestConfig => {
+      const urlParts = [];
 
-    return axiosRequest({
-      ...requestConfig,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...requestConfig.headers,
-      },
-      paramsSerializer: (params) => {
-        return qs.stringify(params, {
-          arrayFormat: serializer?.array,
-        });
-      },
-    })
-      .then(handleSuccess)
-      .catch(handleError);
+      if (baseRequestConfig.baseURL) {
+        urlParts.push(baseRequestConfig.baseURL);
+      }
+
+      if (baseRequestConfig.url) {
+        urlParts.push(baseRequestConfig.url);
+      }
+
+      if (requestConfig.baseURL) {
+        urlParts.push(requestConfig.baseURL);
+      }
+
+      if (requestConfig.url) {
+        urlParts.push(requestConfig.url);
+      }
+
+      const url = urlParts.join("/").replace("//", "/");
+
+      return {
+        ...baseRequestConfig,
+        ...requestConfig,
+        baseURL: "",
+        url,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...baseRequestConfig.headers,
+          ...requestConfig.headers,
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, {
+            arrayFormat: baseRequestConfig.serializer?.array,
+          });
+        },
+      };
+    };
+
+    return axios.request(getConfig()).then(handleSuccess).catch(handleError);
   };
 };
 
