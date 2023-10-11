@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 
 export type BaseRequestConfig = AxiosRequestConfig & {
-  debug: boolean;
+  debug?: boolean;
   serializer?: {
     array?: "indices" | "brackets" | "repeat" | "comma";
   };
