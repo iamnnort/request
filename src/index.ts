@@ -3,7 +3,7 @@ import { config } from "./config";
 import { BaseRequestConfig, RequestConfig } from "./index.types";
 import { requestHelper } from "./helpers/request";
 
-export const request = (baseRequestConfig: BaseRequestConfig = {}) => {
+export function request(baseRequestConfig: BaseRequestConfig = {}) {
   return <T>(requestConfig: RequestConfig = {}) => {
     return axios
       .request(
@@ -12,11 +12,11 @@ export const request = (baseRequestConfig: BaseRequestConfig = {}) => {
       .then(requestHelper.makeSuccessHandler<T>(baseRequestConfig))
       .catch(requestHelper.makeErrorHandler(baseRequestConfig));
   };
-};
+}
 
-export const makeDataSource = <T, SP, SR, C, U>(
+export function makeDataSource<T, SP, SR, C, U>(
   baseRequestConfig: BaseRequestConfig
-) => {
+) {
   const dataSourceRequest = request(baseRequestConfig);
 
   async function search(request: SP = {} as SP) {
@@ -73,7 +73,13 @@ export const makeDataSource = <T, SP, SR, C, U>(
     update,
     remove,
   };
-};
+}
+
+export function sleep(seconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, seconds * 1000);
+  });
+}
 
 export const methods = config.methods;
 export const statuses = config.statuses;
