@@ -81,7 +81,7 @@ export function makeDataSource<T, SP, SR, C, U>(
     update,
     bulkUpdate,
     remove,
-    common: request,
+    common: request(baseRequestConfig),
   };
 }
 
