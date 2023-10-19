@@ -14,7 +14,7 @@ const makeUrl = (
     requestConfig.baseUrl,
     requestConfig.url,
     ...(requestConfig.urlParts || []),
-  ];
+  ].map((urlPart) => urlPart?.toString());
 
   const isSecureProtocol = urlParts.some((urlPart) =>
     urlPart?.includes("https")

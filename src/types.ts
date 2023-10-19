@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from "axios";
 
 export type RequestConfig = Omit<AxiosRequestConfig, "baseURL"> & {
   baseUrl?: string;
-  urlParts?: string[];
+  urlParts?: (number | string)[];
 };
 
 export type BaseRequestConfig = RequestConfig & {
