@@ -29,6 +29,7 @@ const data = await req({
 | ------------------ | -------------------------------------------------------------------------- |
 | `baseUrl`          | Main part of the server URL that will be used for the request              |
 | `url`              | Server URL that will be used for the request                               |
+| `urlParts`         | Additional parts of URL that will be used for the request                  |
 | `method`           | Request method to be used when making the request                          |
 | `params`           | URL parameters to be sent with the request                                 |
 | `data`             | Data to be sent as the request body                                        |

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { config } from "./config";
-import { BaseRequestConfig, RequestConfig } from "./index.types";
+import { BaseRequestConfig, RequestConfig } from "./types";
 import { requestHelper } from "./helpers/request";
 
 export function request(baseRequestConfig: BaseRequestConfig = {}) {
@@ -57,6 +57,14 @@ export function makeDataSource<T, SP, SR, C, U>(
     });
   }
 
+  async function bulkUpdate(request: C = {} as C) {
+    return dataSourceRequest<T>({
+      method: methods.PUT,
+      url: "/bulk",
+      ...request,
+    });
+  }
+
   async function remove(id: any, request: SP = {} as SP) {
     return dataSourceRequest<T>({
       method: methods.DELETE,
@@ -71,7 +79,9 @@ export function makeDataSource<T, SP, SR, C, U>(
     create,
     bulkCreate,
     update,
+    bulkUpdate,
     remove,
+    common: request,
   };
 }
 
@@ -81,7 +91,6 @@ export function sleep(seconds: number) {
   });
 }
 
-export const methods = config.methods;
-export const statuses = config.statuses;
+export const { methods, statuses } = config;
 
-export type { BaseRequestConfig, RequestConfig } from "./index.types";
+export type { BaseRequestConfig, RequestConfig } from "./types";

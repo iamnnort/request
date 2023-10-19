@@ -1,5 +1,5 @@
 import { stringify } from "qs";
-import { BaseRequestConfig, RequestConfig } from "../index.types";
+import { BaseRequestConfig, RequestConfig } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 import { loggerHelper } from "./logger";
 
@@ -10,8 +10,10 @@ const makeUrl = (
   const urlParts = [
     baseRequestConfig.baseUrl,
     baseRequestConfig.url,
+    ...(baseRequestConfig.urlParts || []),
     requestConfig.baseUrl,
     requestConfig.url,
+    ...(requestConfig.urlParts || []),
   ];
 
   const isSecureProtocol = urlParts.some((urlPart) =>
