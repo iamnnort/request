@@ -52,6 +52,26 @@ const makeSerializer = (baseRequestConfig: BaseRequestConfig = {}) => {
   };
 };
 
+const makeData = (
+  baseRequestConfig: BaseRequestConfig = {},
+  requestConfig: RequestConfig = {}
+) => {
+  return {
+    ...baseRequestConfig.data,
+    ...requestConfig.data,
+  };
+};
+
+const makeParams = (
+  baseRequestConfig: BaseRequestConfig = {},
+  requestConfig: RequestConfig = {}
+) => {
+  return {
+    ...baseRequestConfig.params,
+    ...requestConfig.params,
+  };
+};
+
 const makeRequestConfig = (
   baseRequestConfig: BaseRequestConfig = {},
   requestConfig: RequestConfig = {}
@@ -62,6 +82,8 @@ const makeRequestConfig = (
     url: makeUrl(baseRequestConfig, requestConfig),
     headers: makeHeaders(baseRequestConfig, requestConfig),
     paramsSerializer: makeSerializer(baseRequestConfig),
+    data: makeData(baseRequestConfig, requestConfig),
+    params: makeParams(baseRequestConfig, requestConfig),
   };
 
   if (baseRequestConfig.logger) {
