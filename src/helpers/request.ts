@@ -1,5 +1,5 @@
 import { stringify } from "qs";
-import { BaseRequestConfig, RequestConfig } from "../types";
+import { BaseRequestConfig, HttpMethods, RequestConfig } from "../types";
 import { AxiosError, AxiosResponse } from "axios";
 import { loggerHelper } from "./logger";
 
@@ -52,6 +52,30 @@ const makeSerializer = (baseRequestConfig: BaseRequestConfig = {}) => {
   };
 };
 
+const makeData = (
+  baseRequestConfig: BaseRequestConfig = {},
+  requestConfig: RequestConfig = {}
+) => {
+  if (requestConfig.method === HttpMethods.GET) {
+    return undefined;
+  }
+
+  return {
+    ...baseRequestConfig.data,
+    ...requestConfig.data,
+  };
+};
+
+const makeParams = (
+  baseRequestConfig: BaseRequestConfig = {},
+  requestConfig: RequestConfig = {}
+) => {
+  return {
+    ...baseRequestConfig.params,
+    ...requestConfig.params,
+  };
+};
+
 const makeRequestConfig = (
   baseRequestConfig: BaseRequestConfig = {},
   requestConfig: RequestConfig = {}
@@ -61,6 +85,8 @@ const makeRequestConfig = (
     ...requestConfig,
     url: makeUrl(baseRequestConfig, requestConfig),
     headers: makeHeaders(baseRequestConfig, requestConfig),
+    data: makeData(baseRequestConfig, requestConfig),
+    params: makeParams(baseRequestConfig, requestConfig),
     paramsSerializer: makeSerializer(baseRequestConfig),
   };
 

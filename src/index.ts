@@ -1,7 +1,8 @@
 import axios from "axios";
-import { config } from "./config";
-import { BaseRequestConfig, RequestConfig } from "./types";
+import { BaseRequestConfig, HttpMethods, RequestConfig } from "./types";
 import { requestHelper } from "./helpers/request";
+
+export * from "./types";
 
 export function request(baseRequestConfig: BaseRequestConfig = {}) {
   return <T>(requestConfig: RequestConfig = {}) => {
@@ -21,14 +22,14 @@ export function makeDataSource<T, SP, SR, C, U>(
 
   async function search(request: SP = {} as SP) {
     return dataSourceRequest<SR>({
-      method: methods.GET,
+      method: HttpMethods.GET,
       ...request,
     });
   }
 
   async function get(id: any, request: SP = {} as SP) {
     return dataSourceRequest<T>({
-      method: methods.GET,
+      method: HttpMethods.GET,
       url: `/${id}`,
       ...request,
     });
@@ -36,14 +37,14 @@ export function makeDataSource<T, SP, SR, C, U>(
 
   async function create(request: C = {} as C) {
     return dataSourceRequest<T>({
-      method: methods.POST,
+      method: HttpMethods.POST,
       ...request,
     });
   }
 
   async function bulkCreate(request: C = {} as C) {
     return dataSourceRequest<T>({
-      method: methods.POST,
+      method: HttpMethods.POST,
       url: "/bulk",
       ...request,
     });
@@ -51,7 +52,7 @@ export function makeDataSource<T, SP, SR, C, U>(
 
   async function update(id: any, request: U = {} as U) {
     return dataSourceRequest<T>({
-      method: methods.PUT,
+      method: HttpMethods.PUT,
       url: `/${id}`,
       ...request,
     });
@@ -59,7 +60,7 @@ export function makeDataSource<T, SP, SR, C, U>(
 
   async function bulkUpdate(request: C = {} as C) {
     return dataSourceRequest<T>({
-      method: methods.PUT,
+      method: HttpMethods.PUT,
       url: "/bulk",
       ...request,
     });
@@ -67,7 +68,7 @@ export function makeDataSource<T, SP, SR, C, U>(
 
   async function remove(id: any, request: SP = {} as SP) {
     return dataSourceRequest<T>({
-      method: methods.DELETE,
+      method: HttpMethods.DELETE,
       url: `/${id}`,
       ...request,
     });
@@ -90,7 +91,3 @@ export function sleep(seconds: number) {
     setTimeout(resolve, seconds * 1000);
   });
 }
-
-export const { methods, statuses } = config;
-
-export type { BaseRequestConfig, RequestConfig } from "./types";

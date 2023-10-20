@@ -1,4 +1,4 @@
-import { methods, request } from "../src";
+import { HttpMethods, request } from "../src";
 
 const runSimple = async () => {
   const req = request({
@@ -8,7 +8,7 @@ const runSimple = async () => {
   });
 
   const users = await req({
-    method: methods.GET,
+    method: HttpMethods.GET,
     url: "/users",
   });
 

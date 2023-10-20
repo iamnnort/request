@@ -11,14 +11,14 @@ yarn install @iamnnort/request
 ## Usage
 
 ```javascript
-import { request, methods } from "@iamnnort/request";
+import { request, HttpMethods } from "@iamnnort/request";
 
 const req = request({
   baseUrl: "...",
 });
 
 const data = await req({
-  method: methods.GET,
+  method: HttpMethods.GET,
   url: "...",
 });
 ```
