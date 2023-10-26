@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "keywords": [
     "request",
@@ -19,8 +19,13 @@
   "scripts": {
     "start": "yarn ts-node ./examples/simple",
     "build": "tsup",
-    "test": "jest --passWithNoTests"
+    "lint": "eslint ./{src,examples}/**/*.ts --fix",
+    "unit": "jest",
+    "test": "yarn lint && yarn unit"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iamnnort/request.git"
@@ -44,6 +49,13 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsup": "^7.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "pre-commit": "^1.2.2",
+    "prettier": "^3.0.3"
   }
 }

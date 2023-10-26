@@ -1,11 +1,11 @@
-import { stringify } from "qs";
-import { BaseRequestConfig, HttpMethods, RequestConfig } from "../types";
-import { AxiosError, AxiosResponse } from "axios";
-import { loggerHelper } from "./logger";
+import { stringify } from 'qs';
+import { BaseRequestConfig, HttpMethods, RequestConfig } from '../types';
+import { AxiosError, AxiosResponse } from 'axios';
+import { loggerHelper } from './logger/logger';
 
 const makeUrl = (
   baseRequestConfig: BaseRequestConfig = {},
-  requestConfig: RequestConfig = {}
+  requestConfig: RequestConfig = {},
 ) => {
   const urlParts = [
     baseRequestConfig.baseUrl,
@@ -16,29 +16,29 @@ const makeUrl = (
     ...(requestConfig.urlParts || []),
   ].map((urlPart) => urlPart?.toString());
 
-  const isSecureProtocol = urlParts.some((urlPart) =>
-    urlPart?.includes("https")
+  const isSecureProtocol = urlParts.some(
+    (urlPart) => urlPart?.includes('https'),
   );
-  const protocol = isSecureProtocol ? "https" : "http";
+  const protocol = isSecureProtocol ? 'https' : 'http';
 
   const actualUrlParts = urlParts
     .filter((urlPart) => urlPart)
     .map((urlPart) => {
-      return urlPart?.replace(/(^(https?:\/\/|\/))/, "");
+      return urlPart?.replace(/(^(https?:\/\/|\/))/, '');
     });
 
-  const url = [`${protocol}:/`, ...actualUrlParts].join("/");
+  const url = [`${protocol}:/`, ...actualUrlParts].join('/');
 
   return url;
 };
 
 const makeHeaders = (
   baseRequestConfig: BaseRequestConfig = {},
-  requestConfig: RequestConfig = {}
+  requestConfig: RequestConfig = {},
 ) => {
   return {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
     ...baseRequestConfig.headers,
     ...requestConfig.headers,
   };
@@ -54,7 +54,7 @@ const makeSerializer = (baseRequestConfig: BaseRequestConfig = {}) => {
 
 const makeData = (
   baseRequestConfig: BaseRequestConfig = {},
-  requestConfig: RequestConfig = {}
+  requestConfig: RequestConfig = {},
 ) => {
   if (requestConfig.method === HttpMethods.GET) {
     return undefined;
@@ -68,7 +68,7 @@ const makeData = (
 
 const makeParams = (
   baseRequestConfig: BaseRequestConfig = {},
-  requestConfig: RequestConfig = {}
+  requestConfig: RequestConfig = {},
 ) => {
   return {
     ...baseRequestConfig.params,
@@ -78,7 +78,7 @@ const makeParams = (
 
 const makeRequestConfig = (
   baseRequestConfig: BaseRequestConfig = {},
-  requestConfig: RequestConfig = {}
+  requestConfig: RequestConfig = {},
 ) => {
   const config = {
     ...baseRequestConfig,
@@ -110,7 +110,7 @@ const makeSuccessHandler = <T>(baseRequestConfig: BaseRequestConfig = {}) => {
 const makeErrorHandler = (baseRequestConfig: BaseRequestConfig = {}) => {
   return (error: AxiosError) => {
     if (baseRequestConfig.debug) {
-      console.log("Error:", error);
+      console.log('Error:', error);
     }
 
     if (baseRequestConfig.logger) {

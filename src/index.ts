@@ -1,14 +1,14 @@
-import axios from "axios";
-import { BaseRequestConfig, HttpMethods, RequestConfig } from "./types";
-import { requestHelper } from "./helpers/request";
+import axios from 'axios';
+import { BaseRequestConfig, HttpMethods, RequestConfig } from './types';
+import { requestHelper } from './helpers/request';
 
-export * from "./types";
+export * from './types';
 
 export function request(baseRequestConfig: BaseRequestConfig = {}) {
   return <T>(requestConfig: RequestConfig = {}) => {
     return axios
       .request(
-        requestHelper.makeRequestConfig(baseRequestConfig, requestConfig)
+        requestHelper.makeRequestConfig(baseRequestConfig, requestConfig),
       )
       .then(requestHelper.makeSuccessHandler<T>(baseRequestConfig))
       .catch(requestHelper.makeErrorHandler(baseRequestConfig));
@@ -16,7 +16,7 @@ export function request(baseRequestConfig: BaseRequestConfig = {}) {
 }
 
 export function makeDataSource<T, SP, SR, C, U>(
-  baseRequestConfig: BaseRequestConfig
+  baseRequestConfig: BaseRequestConfig,
 ) {
   const dataSourceRequest = request(baseRequestConfig);
 
@@ -45,7 +45,7 @@ export function makeDataSource<T, SP, SR, C, U>(
   async function bulkCreate(request: C = {} as C) {
     return dataSourceRequest<T>({
       method: HttpMethods.POST,
-      url: "/bulk",
+      url: '/bulk',
       ...request,
     });
   }
@@ -61,7 +61,7 @@ export function makeDataSource<T, SP, SR, C, U>(
   async function bulkUpdate(request: C = {} as C) {
     return dataSourceRequest<T>({
       method: HttpMethods.PUT,
-      url: "/bulk",
+      url: '/bulk',
       ...request,
     });
   }

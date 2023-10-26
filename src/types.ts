@@ -1,6 +1,6 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from 'axios';
 
-export type RequestConfig = Omit<AxiosRequestConfig, "baseURL"> & {
+export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL'> & {
   baseUrl?: string;
   urlParts?: (number | string)[];
 };
@@ -9,15 +9,15 @@ export type BaseRequestConfig = RequestConfig & {
   debug?: boolean;
   logger?: boolean;
   serializer?: {
-    array?: "indices" | "brackets" | "repeat" | "comma";
+    array?: 'indices' | 'brackets' | 'repeat' | 'comma';
   };
 };
 
 export enum HttpMethods {
-  GET = "get",
-  POST = "post",
-  PUT = "put",
-  DELETE = "delete",
+  GET = 'get',
+  POST = 'post',
+  PUT = 'put',
+  DELETE = 'delete',
 }
 export enum HttpStatuses {
   OK = 200,

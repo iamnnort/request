@@ -1,5 +1,5 @@
-import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-import { stringify } from "qs";
+import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { stringify } from 'qs';
 
 type LoggerDto = {
   request?: InternalAxiosRequestConfig & Request;
@@ -23,12 +23,12 @@ const makeUrl = (dto: LoggerDto = {}) => {
     dto.error?.response?.config.params;
 
   if (!url) {
-    return "";
+    return '';
   }
 
   if (params) {
-    delete params["0"];
-    return [url, stringify(params)].filter((_) => _).join("?");
+    delete params['0'];
+    return [url, stringify(params)].filter((_) => _).join('?');
   } else {
     return url;
   }
@@ -41,7 +41,7 @@ const makeMethod = (dto: LoggerDto = {}) => {
     dto.error?.response?.config.method;
 
   if (!method) {
-    return "";
+    return '';
   }
 
   return method.toUpperCase();
@@ -55,10 +55,10 @@ const makeRequestData = (dto: LoggerDto = {}) => {
     dto.error?.response?.config.data;
 
   if (!data) {
-    return "";
+    return '';
   }
 
-  if (typeof data === "string") {
+  if (typeof data === 'string') {
     return data;
   }
 
@@ -69,10 +69,10 @@ const makeResponseData = (dto: LoggerDto = {}) => {
   const data = dto.response?.data || dto.error?.response?.data;
 
   if (!data) {
-    return "";
+    return '';
   }
 
-  if (typeof data === "string") {
+  if (typeof data === 'string') {
     return data;
   }
 
@@ -83,7 +83,7 @@ const makeStatus = (dto: LoggerDto = {}) => {
   const status = dto.response?.status || dto.error?.response?.status;
 
   if (!status) {
-    return "";
+    return '';
   }
 
   const statusText =
@@ -98,7 +98,7 @@ const makeStatus = (dto: LoggerDto = {}) => {
 
 const logRequest = (request: InternalAxiosRequestConfig & Request) => {
   log([
-    makeType("Request"),
+    makeType('Request'),
     makeMethod({ request }),
     makeUrl({ request }),
     makeRequestData({ request }),
@@ -107,7 +107,7 @@ const logRequest = (request: InternalAxiosRequestConfig & Request) => {
 
 const logResponse = (response: AxiosResponse & Response) => {
   log([
-    makeType("Response"),
+    makeType('Response'),
     makeMethod({ response }),
     makeUrl({ response }),
     makeRequestData({ response }),
@@ -118,7 +118,7 @@ const logResponse = (response: AxiosResponse & Response) => {
 
 const logRequestError = (error: AxiosError) => {
   log([
-    makeType("Error"),
+    makeType('Error'),
     makeMethod({ error }),
     makeUrl({ error }),
     makeRequestData({ error }),
@@ -128,7 +128,7 @@ const logRequestError = (error: AxiosError) => {
 };
 
 const log = (messageParts: string[]) => {
-  const message = messageParts.filter((_) => _).join(" ");
+  const message = messageParts.filter((_) => _).join(' ');
 
   console.log(message);
 };
