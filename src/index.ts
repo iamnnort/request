@@ -91,3 +91,5 @@ export function sleep(seconds: number) {
     setTimeout(resolve, seconds * 1000);
   });
 }
+
+export { makeUrl } from './helpers/request';

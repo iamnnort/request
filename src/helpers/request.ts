@@ -3,7 +3,7 @@ import { BaseRequestConfig, HttpMethods, RequestConfig } from '../types';
 import { AxiosError, AxiosResponse } from 'axios';
 import { loggerHelper } from './logger/logger';
 
-const makeUrl = (
+export const makeUrl = (
   baseRequestConfig: BaseRequestConfig = {},
   requestConfig: RequestConfig = {},
 ) => {
