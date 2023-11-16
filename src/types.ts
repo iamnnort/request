@@ -1,5 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
+export type RequestParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
+
 export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL'> & {
   baseUrl?: string;
   urlParts?: (number | string)[];

@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { BaseRequestConfig, HttpMethods, RequestConfig } from './types';
+import {
+  BaseRequestConfig,
+  HttpMethods,
+  RequestConfig,
+  RequestParams,
+} from './types';
 import { requestHelper } from './helpers/request';
 
 export * from './types';
@@ -15,9 +20,13 @@ export function request(baseRequestConfig: BaseRequestConfig = {}) {
   };
 }
 
-export function makeDataSource<T, SP, SR, C, U>(
-  baseRequestConfig: BaseRequestConfig,
-) {
+export function makeDataSource<
+  T extends object,
+  SP extends RequestParams,
+  SR extends object,
+  C extends RequestParams,
+  U extends RequestParams,
+>(baseRequestConfig: BaseRequestConfig) {
   const dataSourceRequest = request(baseRequestConfig);
 
   async function search(request: SP = {} as SP) {
@@ -43,10 +52,13 @@ export function makeDataSource<T, SP, SR, C, U>(
   }
 
   async function bulkCreate(request: C = {} as C) {
-    return dataSourceRequest<T>({
+    return dataSourceRequest<T[]>({
       method: HttpMethods.POST,
       url: '/bulk',
       ...request,
+      data: {
+        bulk: request.data,
+      },
     });
   }
 
@@ -59,10 +71,13 @@ export function makeDataSource<T, SP, SR, C, U>(
   }
 
   async function bulkUpdate(request: C = {} as C) {
-    return dataSourceRequest<T>({
+    return dataSourceRequest<T[]>({
       method: HttpMethods.PUT,
       url: '/bulk',
       ...request,
+      data: {
+        bulk: request.data,
+      },
     });
   }
 
