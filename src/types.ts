@@ -2,12 +2,26 @@ import { AxiosRequestConfig } from 'axios';
 
 export type RequestParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
 
-export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL'> & {
+export type RequestConfigParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
+
+export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL' | 'url'> & {
   baseUrl?: string;
+  baseUrlName?: string;
+  url?: number | string;
   urlParts?: (number | string)[];
+  bearerToken?: string;
+  urlencoded?: boolean;
+  multipart?: boolean;
+  xml?: boolean;
 };
 
-export type BaseRequestConfig = RequestConfig & {
+export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers'> & {
+  name?: string;
+  baseUrl?: string;
+  baseUrlMap?: Record<string, string>;
+  url?: number | string;
+  urlParts?: (number | string)[];
+  bearerToken?: string;
   debug?: boolean;
   logger?: boolean;
   serializer?: {
@@ -21,6 +35,7 @@ export enum HttpMethods {
   PUT = 'put',
   DELETE = 'delete',
 }
+
 export enum HttpStatuses {
   OK = 200,
   CREATED = 201,

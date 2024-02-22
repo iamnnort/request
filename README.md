@@ -11,16 +11,16 @@ yarn install @iamnnort/request
 ## Usage
 
 ```javascript
-import { request, HttpMethods } from "@iamnnort/request";
+import { RequestDataSource, HttpMethods } from '@iamnnort/request';
 
-const req = request({
-  baseUrl: "...",
+const dataSource = new RequestDataSource({
+  baseUrl: '...',
+  url: '/users'
 });
 
-const data = await req({
-  method: HttpMethods.GET,
-  url: "...",
-});
+const users = await dataSource.search();
+
+const user = await dataSource.get();
 ```
 
 ## Parameters

@@ -1,16 +1,14 @@
-import { HttpMethods, request } from '../src';
+import { RequestDataSource } from '../src';
 
 const runSimple = async () => {
-  const req = request({
+  const dataSource = new RequestDataSource({
     debug: true,
     logger: true,
     baseUrl: 'http://127.0.0.1:3000',
-  });
-
-  const users = await req({
-    method: HttpMethods.GET,
     url: '/users',
   });
+
+  const users = await dataSource.search();
 
   console.log(users);
 };
