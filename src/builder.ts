@@ -65,17 +65,19 @@ export class RequestBuilder {
   }
 
   makeAuth() {
-    if (this.baseConfig.auth) {
+    const auth = this.requestConfig.auth || this.baseConfig.auth;
+
+    if (auth) {
       this.config = {
         ...this.config,
-        auth: this.baseConfig.auth,
+        auth,
       };
 
       return this;
     }
 
     const bearerToken =
-      this.baseConfig.bearerToken || this.requestConfig.bearerToken;
+      this.requestConfig.bearerToken || this.baseConfig.bearerToken;
 
     if (bearerToken) {
       this.config = {
@@ -93,9 +95,14 @@ export class RequestBuilder {
   }
 
   makeUrl() {
+    const baseUrlMap =
+      this.requestConfig.baseUrlMap || this.baseConfig.baseUrlMap;
+    const baseUrlName =
+      this.requestConfig.baseUrlName || this.baseConfig.baseUrlName;
+
     const urlParts = [
-      this.baseConfig.baseUrlMap && this.requestConfig.baseUrlName
-        ? this.baseConfig.baseUrlMap[this.requestConfig.baseUrlName]
+      baseUrlMap && baseUrlName
+        ? baseUrlMap[baseUrlName]
         : this.baseConfig.baseUrl,
       this.baseConfig.url,
       ...(this.baseConfig.urlParts || []),
@@ -115,12 +122,10 @@ export class RequestBuilder {
         return urlPart?.replace(/(^(https?:\/\/|\/))/, '');
       });
 
-    const baseUrl = `${protocol}://${actualUrlParts[0]}`;
-    const url = `/${actualUrlParts.slice(1).join('/')}`;
+    const url = `${protocol}://${actualUrlParts.join('/')}`;
 
     this.config = {
       ...this.config,
-      baseURL: baseUrl,
       url,
     };
 
