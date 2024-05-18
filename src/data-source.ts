@@ -98,6 +98,7 @@ export class RequestDataSource<
     return this.common<Entity>({
       ...config,
       method: HttpMethods.PUT,
+      url: id,
     });
   }
 
