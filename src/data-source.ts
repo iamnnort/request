@@ -94,7 +94,7 @@ export class RequestDataSource<
     });
   }
 
-  update(config: UpdateParams) {
+  update(id: number | string, config: UpdateParams) {
     return this.common<Entity>({
       ...config,
       method: HttpMethods.PUT,
