@@ -119,7 +119,7 @@ export class RequestBuilder {
     const actualUrlParts = urlParts
       .filter((urlPart) => urlPart)
       .map((urlPart) => {
-        return urlPart?.replace(/^(https?:\/\/|\/)|\/$/, '');
+        return urlPart?.replace(/^(https?:\/\/|\/)?(.*?)(\/?)$/, '$2');
       });
 
     const url = `${protocol}://${actualUrlParts.join('/')}`;
