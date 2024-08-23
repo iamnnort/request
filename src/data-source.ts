@@ -37,6 +37,10 @@ export class RequestDataSource<
       .makeSerializer()
       .build();
 
+    if (this.baseConfig.logger) {
+      loggerHelper.logRequest(request as any);
+    }
+
     return axios
       .request(request)
       .then((response: AxiosResponse<T>) => {
