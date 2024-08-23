@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
+import { HttpMethods, HttpStatuses } from '../types';
 
 type LoggerDto = {
   request?: InternalAxiosRequestConfig & Request;
@@ -35,6 +36,19 @@ const makeUrl = (dto: LoggerDto = {}) => {
 };
 
 const makeMethod = (dto: LoggerDto = {}) => {
+  const method =
+    dto.request?.method ||
+    dto.response?.config?.method ||
+    dto.error?.response?.config.method;
+
+  if (!method) {
+    return HttpMethods.GET;
+  }
+
+  return method.toLowerCase() as HttpMethods;
+};
+
+const makeMethodText = (dto: LoggerDto = {}) => {
   const method =
     dto.request?.method ||
     dto.response?.config?.method ||
@@ -83,6 +97,16 @@ const makeStatus = (dto: LoggerDto = {}) => {
   const status = dto.response?.status || dto.error?.response?.status;
 
   if (!status) {
+    return HttpStatuses.INTERNAL_SERVER_ERROR;
+  }
+
+  return status as HttpStatuses;
+};
+
+const makeStatusText = (dto: LoggerDto = {}) => {
+  const status = dto.response?.status || dto.error?.response?.status;
+
+  if (!status) {
     return '';
   }
 
@@ -96,10 +120,19 @@ const makeStatus = (dto: LoggerDto = {}) => {
   return `${status}`;
 };
 
+const makeResponse = <T>(dto: LoggerDto = {}) => {
+  return {
+    success: dto.error === undefined,
+    status: makeStatus(dto),
+    method: makeMethod(dto),
+    data: makeResponseData(dto) as T,
+  };
+};
+
 const logRequest = (request: InternalAxiosRequestConfig & Request) => {
   log([
     makeType('Request'),
-    makeMethod({ request }),
+    makeMethodText({ request }),
     makeUrl({ request }),
     makeRequestData({ request }),
   ]);
@@ -108,10 +141,10 @@ const logRequest = (request: InternalAxiosRequestConfig & Request) => {
 const logResponse = (response: AxiosResponse & Response) => {
   log([
     makeType('Response'),
-    makeMethod({ response }),
+    makeMethodText({ response }),
     makeUrl({ response }),
     makeRequestData({ response }),
-    makeStatus({ response }),
+    makeStatusText({ response }),
     makeResponseData({ response }),
   ]);
 };
@@ -119,10 +152,10 @@ const logResponse = (response: AxiosResponse & Response) => {
 const logRequestError = (error: AxiosError) => {
   log([
     makeType('Error'),
-    makeMethod({ error }),
+    makeMethodText({ error }),
     makeUrl({ error }),
     makeRequestData({ error }),
-    makeStatus({ error }),
+    makeStatusText({ error }),
     makeResponseData({ error }),
   ]);
 };
@@ -137,9 +170,12 @@ export const loggerHelper = {
   makeType,
   makeUrl,
   makeMethod,
+  makeMethodText,
   makeRequestData,
   makeResponseData,
   makeStatus,
+  makeStatusText,
+  makeResponse,
   logRequest,
   logResponse,
   logRequestError,

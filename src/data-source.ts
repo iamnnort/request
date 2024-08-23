@@ -5,6 +5,8 @@ import {
   HttpMethods,
   RequestConfig,
   RequestConfigParams,
+  ResponseConfig,
+  RawResponse,
 } from './types';
 import { loggerHelper } from './logger/logger';
 
@@ -15,15 +17,22 @@ export class RequestDataSource<
   CreateParams extends RequestConfigParams = any,
   UpdateParams extends RequestConfigParams = any,
 > {
-  baseConfig: BaseRequestConfig;
+  baseRequestConfig: BaseRequestConfig;
 
-  constructor(baseConfig: BaseRequestConfig) {
-    this.baseConfig = baseConfig;
+  constructor(baseRequestConfig: BaseRequestConfig) {
+    this.baseRequestConfig = baseRequestConfig;
   }
 
-  common<T>(requestConfig: RequestConfig) {
+  common<T>(requestConfig: RequestConfig): Promise<T>;
+
+  common<T>(
+    requestConfig: RequestConfig,
+    responseConfig: ResponseConfig,
+  ): Promise<RawResponse<T>>;
+
+  common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
     const requestBuilder = new RequestBuilder({
-      baseConfig: this.baseConfig,
+      baseConfig: this.baseRequestConfig,
       requestConfig,
     });
 
@@ -37,26 +46,34 @@ export class RequestDataSource<
       .makeSerializer()
       .build();
 
-    if (this.baseConfig.logger) {
+    if (this.baseRequestConfig.logger) {
       loggerHelper.logRequest(request as any);
     }
 
     return axios
       .request(request)
       .then((response: AxiosResponse<T>) => {
-        if (this.baseConfig.logger) {
+        if (this.baseRequestConfig.logger) {
           loggerHelper.logResponse(response as any);
+        }
+
+        if (responseConfig.raw) {
+          return loggerHelper.makeResponse<T>({ response } as any);
         }
 
         return response.data;
       })
       .catch((error: AxiosError) => {
-        if (this.baseConfig.debug) {
+        if (this.baseRequestConfig.debug) {
           console.log('Error:', error);
         }
 
-        if (this.baseConfig.logger) {
+        if (this.baseRequestConfig.logger) {
           loggerHelper.logRequestError(error as any);
+        }
+
+        if (responseConfig.raw) {
+          return loggerHelper.makeResponse<T>({ error } as any);
         }
 
         throw (

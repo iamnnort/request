@@ -31,6 +31,16 @@ export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers'> & {
   };
 };
 
+export type ResponseConfig = {
+  raw?: boolean;
+};
+
+export type RawResponse<T> = {
+  status: HttpStatuses;
+  method: HttpMethods;
+  data: T;
+};
+
 export enum HttpMethods {
   GET = 'get',
   POST = 'post',
