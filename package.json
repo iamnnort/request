@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "keywords": [
     "request",

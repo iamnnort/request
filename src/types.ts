@@ -36,6 +36,7 @@ export type ResponseConfig = {
 };
 
 export type RawResponse<T> = {
+  success: boolean;
   status: HttpStatuses;
   method: HttpMethods;
   data: T;
