@@ -91,6 +91,20 @@ export class RequestBuilder {
       return this;
     }
 
+    const apiKey = this.requestConfig.apiKey || this.baseConfig.apiKey;
+
+    if (apiKey) {
+      this.config = {
+        ...this.config,
+        headers: {
+          ...this.config.headers,
+          'x-api-key': apiKey,
+        },
+      };
+
+      return this;
+    }
+
     return this;
   }
 
