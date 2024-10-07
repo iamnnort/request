@@ -66,3 +66,17 @@ export enum HttpStatuses {
   CONFLICT = 409,
   INTERNAL_SERVER_ERROR = 500,
 }
+
+export type Pagination = {
+  total: number;
+  currentPage: number;
+  lastPage: number;
+  from: number;
+  to: number;
+  pageSize: number;
+};
+
+export type PaginationResponse<T> = {
+  data: T[];
+  pagination: Pagination;
+};
