@@ -96,11 +96,11 @@ export class RequestDataSource<
   ): AsyncGenerator<Entity[]> {
     let pagination: Pagination = {
       total: 0,
-      currentPage: 0,
+      currentPage: config.params?.page || 0,
       lastPage: 0,
       from: 0,
       to: 0,
-      pageSize: 30,
+      pageSize: config.params?.pageSize || 30,
     };
 
     do {
