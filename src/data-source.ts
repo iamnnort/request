@@ -89,6 +89,34 @@ export class RequestDataSource<
     });
   }
 
+  async *bulkSearch(config: SearchParams = {} as SearchParams) {
+    const paginationConfig = {
+      currentPage: 0,
+      lastPage: 0,
+      pageSize: 30,
+    };
+
+    do {
+      const { data, pagination } = await this.search({
+        ...config,
+        params: {
+          ...config.params,
+          page: paginationConfig.currentPage + 1,
+          pageSize: paginationConfig.pageSize,
+        },
+      });
+
+      if (!data.length) {
+        return [];
+      }
+
+      yield data;
+
+      paginationConfig.currentPage = pagination.currentPage;
+      paginationConfig.lastPage = pagination.lastPage;
+    } while (paginationConfig.currentPage !== paginationConfig.lastPage);
+  }
+
   get(id: number | string, config: SearchParams = {} as SearchParams) {
     return this.common<Entity>({
       ...config,
