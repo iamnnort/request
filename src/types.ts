@@ -17,10 +17,7 @@ export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL' | 'url'> & {
   xml?: boolean;
 };
 
-export type BaseRequestConfig = Pick<
-  AxiosRequestConfig,
-  'auth' | 'headers' | 'timeout'
-> & {
+export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 'timeout'> & {
   name?: string;
   baseUrl?: string;
   baseUrlName?: string;

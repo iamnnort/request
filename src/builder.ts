@@ -8,10 +8,7 @@ export class RequestBuilder {
   requestConfig: RequestConfig;
   config: AxiosRequestConfig;
 
-  constructor(params: {
-    baseConfig: BaseRequestConfig;
-    requestConfig: RequestConfig;
-  }) {
+  constructor(params: { baseConfig: BaseRequestConfig; requestConfig: RequestConfig }) {
     this.baseConfig = params.baseConfig;
     this.requestConfig = params.requestConfig;
     this.config = {
@@ -76,8 +73,7 @@ export class RequestBuilder {
       return this;
     }
 
-    const bearerToken =
-      this.requestConfig.bearerToken || this.baseConfig.bearerToken;
+    const bearerToken = this.requestConfig.bearerToken || this.baseConfig.bearerToken;
 
     if (bearerToken) {
       this.config = {
@@ -109,15 +105,11 @@ export class RequestBuilder {
   }
 
   makeUrl() {
-    const baseUrlMap =
-      this.requestConfig.baseUrlMap || this.baseConfig.baseUrlMap;
-    const baseUrlName =
-      this.requestConfig.baseUrlName || this.baseConfig.baseUrlName;
+    const baseUrlMap = this.requestConfig.baseUrlMap || this.baseConfig.baseUrlMap;
+    const baseUrlName = this.requestConfig.baseUrlName || this.baseConfig.baseUrlName;
 
     const urlParts = [
-      baseUrlMap && baseUrlName
-        ? baseUrlMap[baseUrlName]
-        : this.baseConfig.baseUrl,
+      baseUrlMap && baseUrlName ? baseUrlMap[baseUrlName] : this.baseConfig.baseUrl,
       this.baseConfig.url,
       ...(this.baseConfig.urlParts || []),
       this.requestConfig.baseUrl,
@@ -125,9 +117,7 @@ export class RequestBuilder {
       ...(this.requestConfig.urlParts || []),
     ].map((urlPart) => urlPart?.toString());
 
-    const isSecureProtocol = urlParts.some(
-      (urlPart) => urlPart?.includes('https'),
-    );
+    const isSecureProtocol = urlParts.some((urlPart) => urlPart?.includes('https'));
     const protocol = isSecureProtocol ? 'https' : 'http';
 
     const actualUrlParts = urlParts

@@ -13,15 +13,9 @@ const makeType = (type: string) => {
 };
 
 const makeUrl = (dto: LoggerDto = {}) => {
-  const url =
-    dto.request?.url ||
-    dto.response?.config?.url ||
-    dto.error?.response?.config.url;
+  const url = dto.request?.url || dto.response?.config?.url || dto.error?.response?.config.url;
 
-  const params =
-    dto.request?.params ||
-    dto.response?.config?.params ||
-    dto.error?.response?.config.params;
+  const params = dto.request?.params || dto.response?.config?.params || dto.error?.response?.config.params;
 
   if (!url) {
     return '';
@@ -36,10 +30,7 @@ const makeUrl = (dto: LoggerDto = {}) => {
 };
 
 const makeMethod = (dto: LoggerDto = {}) => {
-  const method =
-    dto.request?.method ||
-    dto.response?.config?.method ||
-    dto.error?.response?.config.method;
+  const method = dto.request?.method || dto.response?.config?.method || dto.error?.response?.config.method;
 
   if (!method) {
     return HttpMethods.GET;
@@ -49,10 +40,7 @@ const makeMethod = (dto: LoggerDto = {}) => {
 };
 
 const makeMethodText = (dto: LoggerDto = {}) => {
-  const method =
-    dto.request?.method ||
-    dto.response?.config?.method ||
-    dto.error?.response?.config.method;
+  const method = dto.request?.method || dto.response?.config?.method || dto.error?.response?.config.method;
 
   if (!method) {
     return '';
@@ -62,11 +50,7 @@ const makeMethodText = (dto: LoggerDto = {}) => {
 };
 
 const makeRequestData = (dto: LoggerDto = {}) => {
-  const data =
-    dto.request?.body ||
-    dto.request?.data ||
-    dto.response?.config?.data ||
-    dto.error?.response?.config.data;
+  const data = dto.request?.body || dto.request?.data || dto.response?.config?.data || dto.error?.response?.config.data;
 
   if (!data) {
     return '';
@@ -110,8 +94,7 @@ const makeStatusText = (dto: LoggerDto = {}) => {
     return '';
   }
 
-  const statusText =
-    dto.response?.statusText || dto.error?.response?.statusText;
+  const statusText = dto.response?.statusText || dto.error?.response?.statusText;
 
   if (statusText) {
     return `${status} ${statusText}`;
@@ -130,12 +113,7 @@ const makeResponse = <T>(dto: LoggerDto = {}) => {
 };
 
 const logRequest = (request: InternalAxiosRequestConfig & Request) => {
-  log([
-    makeType('Request'),
-    makeMethodText({ request }),
-    makeUrl({ request }),
-    makeRequestData({ request }),
-  ]);
+  log([makeType('Request'), makeMethodText({ request }), makeUrl({ request }), makeRequestData({ request })]);
 };
 
 const logResponse = (response: AxiosResponse & Response) => {

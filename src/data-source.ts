@@ -27,10 +27,7 @@ export class RequestDataSource<
 
   common<T>(requestConfig: RequestConfig): Promise<T>;
 
-  common<T>(
-    requestConfig: RequestConfig,
-    responseConfig: ResponseConfig,
-  ): Promise<RawResponse<T>>;
+  common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig): Promise<RawResponse<T>>;
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
     const requestBuilder = new RequestBuilder({
@@ -78,9 +75,7 @@ export class RequestDataSource<
           return loggerHelper.makeResponse<T>({ error } as any);
         }
 
-        throw (
-          error.response?.data || error.response || new Error(error.message)
-        );
+        throw error.response?.data || error.response || new Error(error.message);
       });
   }
 
@@ -91,9 +86,7 @@ export class RequestDataSource<
     });
   }
 
-  async *bulkSearch(
-    config: SearchParams = {} as SearchParams,
-  ): AsyncGenerator<Entity[]> {
+  async *bulkSearch(config: SearchParams = {} as SearchParams): AsyncGenerator<Entity[]> {
     let pagination: Pagination = {
       total: 0,
       currentPage: config.params?.page || 0,
