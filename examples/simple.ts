@@ -2,6 +2,7 @@ import { RequestDataSource } from '../src';
 
 const runSimple = async () => {
   const dataSource = new RequestDataSource({
+    name: 'Api',
     debug: true,
     logger: true,
     baseUrl: 'http://127.0.0.1:3000',

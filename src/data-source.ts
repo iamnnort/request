@@ -10,7 +10,7 @@ import {
   Pagination,
   PaginationResponse,
 } from './types';
-import { loggerHelper } from './logger/logger';
+import { LoggerService } from './logger';
 
 export class RequestDataSource<
   Entity extends Record<string, any> = any,
@@ -30,6 +30,8 @@ export class RequestDataSource<
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig): Promise<RawResponse<T>>;
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
+    const loggerService = new LoggerService(this.baseRequestConfig.name);
+
     const requestBuilder = new RequestBuilder({
       baseConfig: this.baseRequestConfig,
       requestConfig,
@@ -46,18 +48,18 @@ export class RequestDataSource<
       .build();
 
     if (this.baseRequestConfig.logger) {
-      loggerHelper.logRequest(request as any);
+      loggerService.logRequest(request as any);
     }
 
     return axios
       .request(request)
       .then((response: AxiosResponse<T>) => {
         if (this.baseRequestConfig.logger) {
-          loggerHelper.logResponse(response as any);
+          loggerService.logResponse(response as any);
         }
 
         if (responseConfig.raw) {
-          return loggerHelper.makeResponse<T>({ response } as any);
+          return loggerService.makeResponse<T>(response as any);
         }
 
         return response.data;
@@ -68,11 +70,11 @@ export class RequestDataSource<
         }
 
         if (this.baseRequestConfig.logger) {
-          loggerHelper.logRequestError(error as any);
+          loggerService.logRequestError(error as any);
         }
 
         if (responseConfig.raw) {
-          return loggerHelper.makeResponse<T>({ error } as any);
+          return loggerService.makeErrorResponse<T>(error as any);
         }
 
         throw error.response?.data || error.response || new Error(error.message);
