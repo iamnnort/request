@@ -134,7 +134,7 @@ export class RequestDataSource<
     });
   }
 
-  bulkCreate(config: CreateParams) {
+  bulkCreate(config: Omit<CreateParams, 'data'> & { data: CreateParams['data'][] }) {
     return this.common<Entity[]>({
       ...config,
       method: HttpMethods.POST,
@@ -153,7 +153,7 @@ export class RequestDataSource<
     });
   }
 
-  bulkUpdate(config: UpdateParams) {
+  bulkUpdate(config: Omit<UpdateParams, 'data'> & { data: UpdateParams['data'][] }) {
     return this.common<Entity[]>({
       ...config,
       method: HttpMethods.PUT,
