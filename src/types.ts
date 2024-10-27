@@ -64,6 +64,12 @@ export enum HttpStatuses {
   INTERNAL_SERVER_ERROR = 500,
 }
 
+export type Response<T = unknown> = {
+  ok: boolean;
+  data?: T;
+  errorCode?: string;
+};
+
 export type Pagination = {
   total: number;
   currentPage: number;
