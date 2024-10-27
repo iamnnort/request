@@ -37,7 +37,13 @@ export type ResponseConfig = {
   raw?: boolean;
 };
 
-export type RawResponse<T> = {
+export type Response<T = unknown> = {
+  success: boolean;
+  data?: T;
+  errorCode?: string;
+};
+
+export type RawResponse<T = unknown> = {
   success: boolean;
   status: HttpStatuses;
   method: HttpMethods;
@@ -64,12 +70,6 @@ export enum HttpStatuses {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type Response<T = unknown> = {
-  ok: boolean;
-  data?: T;
-  errorCode?: string;
-};
-
 export type Pagination = {
   total: number;
   currentPage: number;
@@ -79,7 +79,7 @@ export type Pagination = {
   pageSize: number;
 };
 
-export type PaginationResponse<T> = {
+export type PaginationResponse<T = unknown> = {
   data: T[];
   pagination: Pagination;
 };
