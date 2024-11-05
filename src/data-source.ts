@@ -81,29 +81,21 @@ export class RequestDataSource<
       });
   }
 
-  search(config: SearchParams = {} as SearchParams) {
-    return this.common<SearchResponse>({
-      ...config,
-      method: HttpMethods.GET,
-    });
-  }
-
-  async *bulkSearch(config: SearchParams = {} as SearchParams): AsyncGenerator<Entity[]> {
+  async *bulkCommon<T>(requestConfig: RequestConfig): AsyncGenerator<T[]> {
     let pagination: Pagination = {
       total: 0,
-      currentPage: config.params?.page || 0,
+      currentPage: requestConfig.params?.page || 0,
       lastPage: 0,
       from: 0,
       to: 0,
-      pageSize: config.params?.pageSize || 30,
+      pageSize: requestConfig.params?.pageSize || 30,
     };
 
     do {
-      const response = await this.common<PaginationResponse<Entity>>({
-        ...config,
-        method: HttpMethods.GET,
+      const response = await this.common<PaginationResponse<T>>({
+        ...requestConfig,
         params: {
-          ...config.params,
+          ...(requestConfig.params || {}),
           page: pagination.currentPage + 1,
           pageSize: pagination.pageSize,
         },
@@ -117,6 +109,20 @@ export class RequestDataSource<
 
       pagination = response.pagination;
     } while (pagination.currentPage !== pagination.lastPage);
+  }
+
+  search(config: SearchParams = {} as SearchParams) {
+    return this.common<SearchResponse>({
+      ...config,
+      method: HttpMethods.GET,
+    });
+  }
+
+  bulkSearch(config: SearchParams = {} as SearchParams) {
+    return this.bulkCommon<Entity>({
+      ...config,
+      method: HttpMethods.GET,
+    });
   }
 
   get(id: number | string, config: SearchParams = {} as SearchParams) {
