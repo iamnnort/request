@@ -7,8 +7,8 @@ import {
   RequestConfigParams,
   ResponseConfig,
   RawResponse,
-  Pagination,
   PaginationResponse,
+  MaxPageCallback,
 } from './types';
 import { LoggerService } from './logger';
 
@@ -81,47 +81,49 @@ export class RequestDataSource<
       });
   }
 
-  async *bulkCommon<T>(requestConfig: RequestConfig): AsyncGenerator<T[]> {
-    let pagination: Pagination = {
+  async *bulkCommon<T>(requestConfig: RequestConfig, callback?: MaxPageCallback): AsyncGenerator<T[]> {
+    const { params } = requestConfig;
+    const { page, pageSize, maxPage, ...searchDto } = params || {};
+
+    const paginationDto = {
+      page: page || 1,
+      pageSize: pageSize || 30,
+    };
+
+    let pagination = {
       total: 0,
-      currentPage: requestConfig.params?.page || 0,
+      currentPage: 0,
       lastPage: 0,
       from: 0,
       to: 0,
-      pageSize: requestConfig.params?.pageSize || 30,
-    };
-
-    const paginationDto = {
-      maxPage: requestConfig.params?.maxPage,
-      maxPageCallback: requestConfig.params?.maxPageCallback,
+      pageSize: 0,
     };
 
     do {
       const response = await this.common<PaginationResponse<T>>({
         ...requestConfig,
         params: {
-          ...(requestConfig.params || {}),
-          page: pagination.currentPage + 1,
-          pageSize: pagination.pageSize,
+          ...paginationDto,
+          ...searchDto,
         },
       });
 
+      pagination = response.pagination;
+
       if (!response.data?.length) {
-        return [];
+        return;
       }
 
       yield response.data;
 
-      pagination = response.pagination;
+      paginationDto.page += 1;
+    } while (pagination.currentPage !== pagination.lastPage && pagination.currentPage !== maxPage);
 
-      if (paginationDto.maxPage && paginationDto.maxPageCallback) {
-        if (pagination.currentPage === paginationDto.maxPage) {
-          paginationDto.maxPageCallback(pagination);
-
-          return [];
-        }
+    if (pagination.currentPage !== pagination.lastPage) {
+      if (callback) {
+        await callback(paginationDto.page);
       }
-    } while (pagination.currentPage !== pagination.lastPage);
+    }
   }
 
   search(config: SearchParams = {} as SearchParams) {

@@ -70,6 +70,13 @@ export enum HttpStatuses {
   INTERNAL_SERVER_ERROR = 500,
 }
 
+export type PaginationDto = {
+  pagination?: boolean | null;
+  page?: number | null;
+  pageSize?: number | null;
+  maxPage?: number | null;
+};
+
 export type Pagination = {
   total: number;
   currentPage: number;
@@ -83,3 +90,5 @@ export type PaginationResponse<T = unknown> = {
   data: T[];
   pagination: Pagination;
 };
+
+export type MaxPageCallback = (page: number) => Promise<void>;
