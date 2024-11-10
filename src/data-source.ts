@@ -91,6 +91,11 @@ export class RequestDataSource<
       pageSize: requestConfig.params?.pageSize || 30,
     };
 
+    const paginationDto = {
+      maxPage: requestConfig.params?.maxPage,
+      maxPageCallback: requestConfig.params?.maxPageCallback,
+    };
+
     do {
       const response = await this.common<PaginationResponse<T>>({
         ...requestConfig,
@@ -108,6 +113,14 @@ export class RequestDataSource<
       yield response.data;
 
       pagination = response.pagination;
+
+      if (paginationDto.maxPage && paginationDto.maxPageCallback) {
+        if (pagination.currentPage === paginationDto.maxPage) {
+          paginationDto.maxPageCallback(pagination);
+
+          return [];
+        }
+      }
     } while (pagination.currentPage !== pagination.lastPage);
   }
 
