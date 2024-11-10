@@ -8,7 +8,6 @@ import {
   ResponseConfig,
   RawResponse,
   PaginationResponse,
-  MaxPageCallback,
 } from './types';
 import { LoggerService } from './logger';
 
@@ -81,9 +80,12 @@ export class RequestDataSource<
       });
   }
 
-  async *bulkCommon<T>(requestConfig: RequestConfig, callback?: MaxPageCallback): AsyncGenerator<T[]> {
+  async *bulkCommon<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}): AsyncGenerator<T[]> {
     const { params } = requestConfig;
-    const { page, pageSize, maxPage, ...searchDto } = params || {};
+    const { bulkCallback } = responseConfig;
+    const { page, pageSize, bulkSize, ...searchDto } = params || {};
+
+    const maxPage = bulkSize ? page - 1 + bulkSize : null;
 
     const paginationDto = {
       page: page || 1,
@@ -120,8 +122,8 @@ export class RequestDataSource<
     } while (pagination.currentPage !== pagination.lastPage && pagination.currentPage !== maxPage);
 
     if (pagination.currentPage !== pagination.lastPage) {
-      if (callback) {
-        await callback(paginationDto.page);
+      if (bulkCallback) {
+        await bulkCallback(paginationDto.page);
       }
     }
   }

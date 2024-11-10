@@ -35,6 +35,7 @@ export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 't
 
 export type ResponseConfig = {
   raw?: boolean;
+  bulkCallback?: (page: number) => Promise<void>;
 };
 
 export type Response<T = unknown> = {
@@ -74,7 +75,7 @@ export type PaginationDto = {
   pagination?: boolean | null;
   page?: number | null;
   pageSize?: number | null;
-  maxPage?: number | null;
+  bulkSize?: number | null;
 };
 
 export type Pagination = {
@@ -90,5 +91,3 @@ export type PaginationResponse<T = unknown> = {
   data: T[];
   pagination: Pagination;
 };
-
-export type MaxPageCallback = (page: number) => Promise<void>;
