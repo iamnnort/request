@@ -45,7 +45,7 @@ export class MessageBuilder {
     if (url) {
       if (params) {
         delete params['0'];
-        this.printQueue.push([url, stringify(params)].filter((_) => _).join('?'));
+        this.printQueue.push([url, stringify(params, { skipNulls: true })].filter((_) => _).join('?'));
       } else {
         this.printQueue.push(url);
       }
