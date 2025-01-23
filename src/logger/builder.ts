@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
-import { HttpMethods, HttpStatuses } from '../types';
+import { BaseRequestConfig, HttpMethods, HttpStatuses } from '../types';
 
 export class MessageBuilder {
   private printQueue: string[];
@@ -9,8 +9,11 @@ export class MessageBuilder {
   private response!: AxiosResponse;
   private error!: AxiosError;
 
-  constructor() {
+  private config: BaseRequestConfig;
+
+  constructor(config: BaseRequestConfig) {
     this.printQueue = [];
+    this.config = config;
   }
 
   setRequest(request: InternalAxiosRequestConfig) {
@@ -45,7 +48,17 @@ export class MessageBuilder {
     if (url) {
       if (params) {
         delete params['0'];
-        this.printQueue.push([url, stringify(params, { skipNulls: true })].filter((_) => _).join('?'));
+        this.printQueue.push(
+          [
+            url,
+            stringify(params, {
+              arrayFormat: this.config.serializer?.array || 'brackets',
+              skipNulls: true,
+            }),
+          ]
+            .filter((_) => _)
+            .join('?'),
+        );
       } else {
         this.printQueue.push(url);
       }

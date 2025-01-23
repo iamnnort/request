@@ -29,7 +29,7 @@ export class RequestDataSource<
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig): Promise<RawResponse<T>>;
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
-    const loggerService = new LoggerService(this.baseRequestConfig.name);
+    const loggerService = new LoggerService(this.baseRequestConfig);
 
     const requestBuilder = new RequestBuilder({
       baseConfig: this.baseRequestConfig,

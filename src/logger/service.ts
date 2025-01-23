@@ -1,15 +1,16 @@
 import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { MessageBuilder } from './builder';
+import { BaseRequestConfig } from '@src/types';
 
 export class LoggerService {
-  context: string = '';
+  private config: BaseRequestConfig;
 
-  constructor(context: string = '') {
-    this.context = context;
+  constructor(config: BaseRequestConfig) {
+    this.config = config;
   }
 
   log(message: string, context?: string) {
-    const ctx = context || this.context || '';
+    const ctx = context || this.config.name || '';
 
     if (ctx) {
       return console.log(`[${ctx}] ${message}`);
@@ -19,7 +20,7 @@ export class LoggerService {
   }
 
   logRequest(request: InternalAxiosRequestConfig) {
-    const loggerMessageBuilder = new MessageBuilder();
+    const loggerMessageBuilder = new MessageBuilder(this.config);
 
     const message = loggerMessageBuilder
       .setRequest(request)
@@ -33,7 +34,7 @@ export class LoggerService {
   }
 
   logResponse(response: AxiosResponse) {
-    const loggerMessageBuilder = new MessageBuilder();
+    const loggerMessageBuilder = new MessageBuilder(this.config);
 
     const message = loggerMessageBuilder
       .setResponse(response)
@@ -49,7 +50,7 @@ export class LoggerService {
   }
 
   logRequestError(error: AxiosError) {
-    const loggerMessageBuilder = new MessageBuilder();
+    const loggerMessageBuilder = new MessageBuilder(this.config);
 
     const message = loggerMessageBuilder
       .setError(error)
@@ -65,7 +66,7 @@ export class LoggerService {
   }
 
   makeResponse<T>(response: AxiosResponse) {
-    const loggerMessageBuilder = new MessageBuilder();
+    const loggerMessageBuilder = new MessageBuilder(this.config);
 
     const responseData = loggerMessageBuilder.setResponse(response).makeResponse<T>();
 
@@ -73,7 +74,7 @@ export class LoggerService {
   }
 
   makeErrorResponse<T>(error: AxiosError) {
-    const loggerMessageBuilder = new MessageBuilder();
+    const loggerMessageBuilder = new MessageBuilder(this.config);
 
     const errorResponseData = loggerMessageBuilder.setError(error).makeResponse<T>();
 
