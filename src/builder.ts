@@ -12,6 +12,7 @@ export class RequestBuilder {
     this.baseConfig = params.baseConfig;
     this.requestConfig = params.requestConfig;
     this.config = {
+      timeout: params.requestConfig.timeout || params.baseConfig.timeout,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
