@@ -5,7 +5,7 @@ Request handler for Node.js - Fast - Interactive - Simple
 ## Installation
 
 ```bash
-yarn install @iamnnort/request
+yarn add @iamnnort/request
 ```
 
 ## Usage
