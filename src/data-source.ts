@@ -24,9 +24,14 @@ export class RequestDataSource<
     this.baseRequestConfig = baseRequestConfig;
   }
 
-  common<T>(requestConfig: RequestConfig): Promise<T>;
+  common<T>(requestConfig: RequestConfig, responseConfig?: ResponseConfig): Promise<T>;
 
-  common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig): Promise<RawResponse<T>>;
+  common<T>(
+    requestConfig: RequestConfig,
+    responseConfig: ResponseConfig & {
+      raw: true;
+    },
+  ): Promise<RawResponse<T>>;
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
     const loggerService = new LoggerService(this.baseRequestConfig);
@@ -80,10 +85,17 @@ export class RequestDataSource<
       });
   }
 
-  async *bulkCommon<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}): AsyncGenerator<T[]> {
-    const { params } = requestConfig;
-    const { bulkCallback } = responseConfig;
-    const { page, pageSize, bulkSize, ...searchDto } = params || {};
+  bulkCommon<T>(requestConfig: RequestConfig, responseConfig?: ResponseConfig): AsyncGenerator<T[]>;
+
+  bulkCommon<T>(
+    requestConfig: RequestConfig,
+    responseConfig: ResponseConfig & {
+      raw: true;
+    },
+  ): AsyncGenerator<PaginationResponse<T>>;
+
+  async *bulkCommon<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
+    const { page, pageSize, bulkSize, ...searchDto } = requestConfig.params || {};
 
     const paginationDto = {
       page: page || 1,
@@ -116,14 +128,18 @@ export class RequestDataSource<
         return;
       }
 
-      yield response.data;
+      if (responseConfig.raw) {
+        yield response;
+      } else {
+        yield response.data;
+      }
 
       paginationDto.page += 1;
     } while (pagination.currentPage !== pagination.lastPage && pagination.currentPage !== maxPage);
 
     if (pagination.currentPage !== pagination.lastPage) {
-      if (bulkCallback) {
-        await bulkCallback(paginationDto.page);
+      if (responseConfig.bulkCallback) {
+        await responseConfig.bulkCallback(paginationDto.page);
       }
     }
   }
