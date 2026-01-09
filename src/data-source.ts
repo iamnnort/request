@@ -158,6 +158,19 @@ export class RequestDataSource<
     });
   }
 
+  searchOne(config: SearchParams = {} as SearchParams) {
+    return this.common<Entity>({
+      ...config,
+      method: HttpMethods.GET,
+      params: {
+        ...config.params,
+        pageSize: 1,
+        extended: true,
+        strict: true,
+      },
+    });
+  }
+
   get(id: number | string, config: SearchParams = {} as SearchParams) {
     return this.common<Entity>({
       ...config,
