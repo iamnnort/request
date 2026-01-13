@@ -158,8 +158,8 @@ export class RequestDataSource<
     });
   }
 
-  searchOne(config: SearchParams = {} as SearchParams) {
-    return this.common<Entity>({
+  async searchOne(config: SearchParams = {} as SearchParams) {
+    const response = await this.common<SearchResponse>({
       ...config,
       method: HttpMethods.GET,
       params: {
@@ -169,6 +169,8 @@ export class RequestDataSource<
         strict: true,
       },
     });
+
+    return response.data?.[0] as Entity;
   }
 
   get(id: number | string, config: SearchParams = {} as SearchParams) {
