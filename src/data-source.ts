@@ -163,10 +163,10 @@ export class RequestDataSource<
       ...config,
       method: HttpMethods.GET,
       params: {
-        ...config.params,
         pageSize: 1,
         extended: true,
         strict: true,
+        ...config.params,
       },
     });
 
