@@ -1,5 +1,5 @@
 const config = require('@iamnnort/config/tsup');
 
 module.exports = config({
-  entry: ['src/index.ts'],
+  entry: ['./src/index.ts'],
 });

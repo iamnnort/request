@@ -1,24 +1,27 @@
 import { AxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
-
-import { BaseRequestConfig, HttpMethods, RequestConfig } from './types';
+import { HttpMethods } from '@iamnnort/config/http';
+import { BaseRequestConfig, RequestConfig } from './types';
+import { SerializerArrayFormats } from './serializer';
 
 export class RequestBuilder {
-  baseConfig: BaseRequestConfig;
+  baseRequestConfig: BaseRequestConfig;
   requestConfig: RequestConfig;
+
   config: AxiosRequestConfig;
 
-  constructor(params: { baseConfig: BaseRequestConfig; requestConfig: RequestConfig }) {
-    this.baseConfig = params.baseConfig;
-    this.requestConfig = params.requestConfig;
+  constructor(options: { baseRequestConfig: BaseRequestConfig; requestConfig: RequestConfig }) {
+    this.baseRequestConfig = options.baseRequestConfig;
+    this.requestConfig = options.requestConfig;
+
     this.config = {
-      timeout: params.requestConfig.timeout || params.baseConfig.timeout,
-      responseType: params.requestConfig.responseType || params.baseConfig.responseType,
+      timeout: options.requestConfig.timeout || options.baseRequestConfig.timeout,
+      responseType: options.requestConfig.responseType || options.baseRequestConfig.responseType,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        ...params.baseConfig.headers,
-        ...params.requestConfig.headers,
+        ...options.baseRequestConfig.headers,
+        ...options.requestConfig.headers,
       },
     };
   }
@@ -64,7 +67,7 @@ export class RequestBuilder {
   }
 
   makeAuth() {
-    const auth = this.requestConfig.auth || this.baseConfig.auth;
+    const auth = this.requestConfig.auth || this.baseRequestConfig.auth;
 
     if (auth) {
       this.config = {
@@ -75,7 +78,7 @@ export class RequestBuilder {
       return this;
     }
 
-    const bearerToken = this.requestConfig.bearerToken || this.baseConfig.bearerToken;
+    const bearerToken = this.requestConfig.bearerToken || this.baseRequestConfig.bearerToken;
 
     if (bearerToken) {
       this.config = {
@@ -89,7 +92,7 @@ export class RequestBuilder {
       return this;
     }
 
-    const apiKey = this.requestConfig.apiKey || this.baseConfig.apiKey;
+    const apiKey = this.requestConfig.apiKey || this.baseRequestConfig.apiKey;
 
     if (apiKey) {
       this.config = {
@@ -107,13 +110,13 @@ export class RequestBuilder {
   }
 
   makeUrl() {
-    const baseUrlMap = this.requestConfig.baseUrlMap || this.baseConfig.baseUrlMap;
-    const baseUrlName = this.requestConfig.baseUrlName || this.baseConfig.baseUrlName;
+    const baseUrlMap = this.requestConfig.baseUrlMap || this.baseRequestConfig.baseUrlMap;
+    const baseUrlName = this.requestConfig.baseUrlName || this.baseRequestConfig.baseUrlName;
 
     const urlParts = [
-      baseUrlMap && baseUrlName ? baseUrlMap[baseUrlName] : this.baseConfig.baseUrl,
-      this.baseConfig.url,
-      ...(this.baseConfig.urlParts || []),
+      baseUrlMap && baseUrlName ? baseUrlMap[baseUrlName] : this.baseRequestConfig.baseUrl,
+      this.baseRequestConfig.url,
+      ...(this.baseRequestConfig.urlParts || []),
       this.requestConfig.baseUrl,
       this.requestConfig.url,
       ...(this.requestConfig.urlParts || []),
@@ -181,11 +184,13 @@ export class RequestBuilder {
   makeSerializer() {
     this.config = {
       ...this.config,
-      paramsSerializer: (params: any) => {
-        return stringify(params, {
-          arrayFormat: this.baseConfig.serializer?.array || 'brackets',
-          skipNulls: true,
-        });
+      paramsSerializer: {
+        serialize: (params: any) => {
+          return stringify(params, {
+            arrayFormat: this.baseRequestConfig.serializer?.arrayFormat || SerializerArrayFormats.BRACKETS,
+            skipNulls: true,
+          });
+        },
       },
     };
 

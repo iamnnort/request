@@ -13,12 +13,15 @@ yarn add @iamnnort/request
 ## Usage
 
 ```typescript
-import { RequestDataSource } from '@iamnnort/request';
+import { LoggerLevels, RequestDataSource } from '@iamnnort/request';
 
 const dataSource = new RequestDataSource({
-  name: 'Todo Api',
   baseUrl: 'https://dummyjson.com',
   url: '/todos',
+  logger: {
+    name: 'Todo Api',
+    level: LoggerLevels.DEBUG,
+  },
 });
 
 // Search
@@ -53,14 +56,18 @@ await dataSource.remove(1);
 
 ## Logging
 
-Set the `logLevel` option to enable it.
+Set the `logger` option to enable it.
 
 ```typescript
+import { LoggerLevels, RequestDataSource } from '@iamnnort/request';
+
 const dataSource = new RequestDataSource({
-  name: 'Todo Api',
   baseUrl: 'https://dummyjson.com',
   url: '/todos',
-  logLevel: 'debug',
+  logger: {
+    name: 'Todo Api',
+    level: LoggerLevels.DEBUG,
+  },
 });
 ```
 
@@ -79,48 +86,49 @@ INFO (Todo Api): GET https://dummyjson.com/todos?page=1 200 OK (150ms)
 
 ### Base Config
 
-| Parameter          | Type     | Description                                                                |
-| ------------------ | -------- | -------------------------------------------------------------------------- |
-| `name`             | `string` | Name used as the logger label                                              |
-| `baseUrl`          | `string` | Main part of the server URL that will be used for the request              |
-| `url`              | `string \| number` | Server URL that will be used for the request                     |
-| `urlParts`         | `(string \| number)[]` | Additional parts of URL that will be used for the request      |
-| `baseUrlName`      | `string` | Key to look up the base URL from `baseUrlMap`                              |
-| `baseUrlMap`       | `Record<string, string>` | Map of named base URLs                                       |
-| `headers`          | `object` | Custom headers to be sent                                                  |
-| `auth`             | `object` | HTTP Basic auth credentials                                                |
-| `bearerToken`      | `string` | Bearer token for Authorization header                                      |
-| `apiKey`           | `string` | API key sent via `x-api-key` header                                        |
-| `timeout`          | `number` | Request timeout in milliseconds                                            |
-| `responseType`     | `string` | Response type (e.g. `json`, `text`, `stream`)                              |
-| `logLevel`         | `string` | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)             |
-| `serializer`       | `object` | Config that allows you to customize serializing                            |
-| `serializer.array` | `string` | Array element separator (`indices`, `brackets`, `repeat`, `comma`)         |
+| Parameter              | Type                     | Description                                                        |
+| ---------------------- | ------------------------ | ------------------------------------------------------------------ |
+| `baseUrl`              | `string`                 | Main part of the server URL that will be used for the request      |
+| `url`                  | `string \| number`       | Server URL that will be used for the request                       |
+| `urlParts`             | `(string \| number)[]`   | Additional parts of URL that will be used for the request          |
+| `baseUrlName`          | `string`                 | Key to look up the base URL from `baseUrlMap`                      |
+| `baseUrlMap`           | `Record<string, string>` | Map of named base URLs                                             |
+| `headers`              | `object`                 | Custom headers to be sent                                          |
+| `auth`                 | `object`                 | HTTP Basic auth credentials                                        |
+| `bearerToken`          | `string`                 | Bearer token for Authorization header                              |
+| `apiKey`               | `string`                 | API key sent via `x-api-key` header                                |
+| `timeout`              | `number`                 | Request timeout in milliseconds                                    |
+| `responseType`         | `string`                 | Response type (e.g. `json`, `text`, `stream`)                      |
+| `logger`               | `object`                 | Logger configuration                                               |
+| `logger.name`          | `string`                 | Name used as the logger label                                      |
+| `logger.level`         | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)     |
+| `serializer`           | `object`                 | Config that allows you to customize serializing                    |
+| `serializer.arrayFormat` | `string`               | Array format (`indices`, `brackets`, `repeat`, `comma`)            |
 
 ### Request Config
 
-| Parameter     | Type      | Description                                       |
-| ------------- | --------- | ------------------------------------------------- |
-| `params`      | `object`  | URL parameters to be sent with the request        |
-| `data`        | `object`  | Data to be sent as the request body               |
-| `urlencoded`  | `boolean` | Send data as `application/x-www-form-urlencoded`  |
-| `multipart`   | `boolean` | Send data as `multipart/form-data`                |
-| `xml`         | `boolean` | Send data as `text/xml`                           |
+| Parameter    | Type      | Description                                      |
+| ------------ | --------- | ------------------------------------------------ |
+| `params`     | `object`  | URL parameters to be sent with the request       |
+| `data`       | `object`  | Data to be sent as the request body              |
+| `urlencoded` | `boolean` | Send data as `application/x-www-form-urlencoded` |
+| `multipart`  | `boolean` | Send data as `multipart/form-data`               |
+| `xml`        | `boolean` | Send data as `text/xml`                          |
 
 ## Methods
 
-| Method       | HTTP Method | Description                              |
-| ------------ | ----------- | ---------------------------------------- |
-| `search`     | `GET`       | Search for entities                      |
-| `searchOne`  | `GET`       | Search for a single entity               |
+| Method       | HTTP Method | Description                                |
+| ------------ | ----------- | ------------------------------------------ |
+| `search`     | `GET`       | Search for entities                        |
+| `searchOne`  | `GET`       | Search for a single entity                 |
 | `bulkSearch` | `GET`       | Paginated search returning async generator |
-| `get`        | `GET`       | Get entity by id                         |
-| `create`     | `POST`      | Create entity                            |
-| `bulkCreate` | `POST`      | Create multiple entities                 |
-| `update`     | `PUT`       | Update entity by id                      |
-| `bulkUpdate` | `PUT`       | Update multiple entities                 |
-| `remove`     | `DELETE`    | Remove entity by id                      |
-| `common`     | any         | Execute a custom request                 |
+| `get`        | `GET`       | Get entity by id                           |
+| `create`     | `POST`      | Create entity                              |
+| `bulkCreate` | `POST`      | Create multiple entities                   |
+| `update`     | `PUT`       | Update entity by id                        |
+| `bulkUpdate` | `PUT`       | Update multiple entities                   |
+| `remove`     | `DELETE`    | Remove entity by id                        |
+| `common`     | any         | Execute a custom request                   |
 
 ## License
 

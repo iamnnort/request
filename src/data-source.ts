@@ -1,15 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { HttpMethods } from '@iamnnort/config/http';
 import { RequestBuilder } from './builder';
-import { Logger } from './logger';
-import {
-  BaseRequestConfig,
-  HttpMethods,
-  RequestConfig,
-  RequestConfigParams,
-  ResponseConfig,
-  RawResponse,
-  PaginationResponse,
-} from './types';
+import { Logger } from './logger/logger';
+import { BaseRequestConfig, RequestConfig, RequestConfigParams, ResponseConfig, RawResponse } from './types';
+import { PaginationResponse } from './pagination';
 
 export class RequestDataSource<
   Entity extends Record<string, any> = any,
@@ -18,14 +12,14 @@ export class RequestDataSource<
   CreateParams extends RequestConfigParams = any,
   UpdateParams extends RequestConfigParams = any,
 > {
-  config: BaseRequestConfig;
+  baseRequestConfig: BaseRequestConfig;
 
   logger: Logger;
 
-  constructor(config: BaseRequestConfig) {
-    this.config = config;
+  constructor(baseRequestConfig: BaseRequestConfig) {
+    this.baseRequestConfig = baseRequestConfig;
 
-    this.logger = new Logger(config);
+    this.logger = new Logger(this.baseRequestConfig.logger);
   }
 
   common<T>(requestConfig: RequestConfig, responseConfig?: ResponseConfig): Promise<T>;
@@ -39,7 +33,7 @@ export class RequestDataSource<
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
     const requestBuilder = new RequestBuilder({
-      baseConfig: this.config,
+      baseRequestConfig: this.baseRequestConfig,
       requestConfig,
     });
 
@@ -69,7 +63,7 @@ export class RequestDataSource<
         return response.data;
       })
       .catch((error: AxiosError) => {
-        this.logger.logError(error, Date.now() - startTime);
+        this.logger.logError(request, error, Date.now() - startTime);
 
         if (responseConfig.raw) {
           return this.logger.makeErrorResponse<T>(error);

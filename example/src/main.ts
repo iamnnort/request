@@ -1,10 +1,13 @@
-import { RequestDataSource } from '@iamnnort/request';
+import { LoggerLevels, RequestDataSource } from '@iamnnort/request';
 
 const main = async () => {
   const dataSource = new RequestDataSource({
-    name: 'Todo Api',
     baseUrl: 'https://dummyjson.com',
     url: '/todos',
+    logger: {
+      name: 'Todo Api',
+      level: LoggerLevels.DEBUG,
+    },
   });
 
   await dataSource.search({
