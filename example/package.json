@@ -1,0 +1,15 @@
+{
+  "name": "@iamnnort/request-example",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node ./src/main.ts"
+  },
+  "dependencies": {
+    "@iamnnort/request": "link:.."
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

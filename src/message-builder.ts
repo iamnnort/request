@@ -1,43 +1,33 @@
-import { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { AxiosError, AxiosResponse, AxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
-import { BaseRequestConfig, HttpMethods, HttpStatuses } from '../types';
+import { BaseRequestConfig, HttpMethods, HttpStatuses } from './types';
 
 export class MessageBuilder {
-  private printQueue: string[];
-
-  private request!: InternalAxiosRequestConfig;
-  private response!: AxiosResponse;
-  private error!: AxiosError;
-
   private config: BaseRequestConfig;
 
-  constructor(config: BaseRequestConfig) {
+  private printQueue: string[];
+
+  private request?: AxiosRequestConfig;
+  private response?: AxiosResponse;
+  private error?: AxiosError;
+
+  private duration?: number;
+
+  constructor(
+    config: BaseRequestConfig,
+    options: {
+      request?: AxiosRequestConfig;
+      response?: AxiosResponse;
+      error?: AxiosError;
+      duration?: number;
+    },
+  ) {
     this.printQueue = [];
     this.config = config;
-  }
-
-  setRequest(request: InternalAxiosRequestConfig) {
-    this.request = request;
-
-    return this;
-  }
-
-  setResponse(response: AxiosResponse) {
-    this.response = response;
-
-    return this;
-  }
-
-  setError(error: AxiosError) {
-    this.error = error;
-
-    return this;
-  }
-
-  makeType(type: string) {
-    this.printQueue.push(`[${type}]`);
-
-    return this;
+    this.request = options.request;
+    this.response = options.response;
+    this.error = options.error;
+    this.duration = options.duration;
   }
 
   makeUrl() {
@@ -128,6 +118,14 @@ export class MessageBuilder {
       if (statusText) {
         this.printQueue.push(statusText);
       }
+    }
+
+    return this;
+  }
+
+  makeDuration() {
+    if (this.duration) {
+      this.printQueue.push(`(${this.duration}ms)`);
     }
 
     return this;

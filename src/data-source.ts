@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { RequestBuilder } from './builder';
+import { Logger } from './logger';
 import {
   BaseRequestConfig,
   HttpMethods,
@@ -9,7 +10,6 @@ import {
   RawResponse,
   PaginationResponse,
 } from './types';
-import { LoggerService } from './logger';
 
 export class RequestDataSource<
   Entity extends Record<string, any> = any,
@@ -18,10 +18,14 @@ export class RequestDataSource<
   CreateParams extends RequestConfigParams = any,
   UpdateParams extends RequestConfigParams = any,
 > {
-  baseRequestConfig: BaseRequestConfig;
+  config: BaseRequestConfig;
 
-  constructor(baseRequestConfig: BaseRequestConfig) {
-    this.baseRequestConfig = baseRequestConfig;
+  logger: Logger;
+
+  constructor(config: BaseRequestConfig) {
+    this.config = config;
+
+    this.logger = new Logger(config);
   }
 
   common<T>(requestConfig: RequestConfig, responseConfig?: ResponseConfig): Promise<T>;
@@ -34,10 +38,8 @@ export class RequestDataSource<
   ): Promise<RawResponse<T>>;
 
   common<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
-    const loggerService = new LoggerService(this.baseRequestConfig);
-
     const requestBuilder = new RequestBuilder({
-      baseConfig: this.baseRequestConfig,
+      baseConfig: this.config,
       requestConfig,
     });
 
@@ -51,34 +53,26 @@ export class RequestDataSource<
       .makeSerializer()
       .build();
 
-    if (this.baseRequestConfig.logger) {
-      loggerService.logRequest(request as any);
-    }
+    this.logger.logRequest(request);
+
+    const startTime = Date.now();
 
     return axios
       .request(request)
       .then((response: AxiosResponse<T>) => {
-        if (this.baseRequestConfig.logger) {
-          loggerService.logResponse(response as any);
-        }
+        this.logger.logResponse(response, Date.now() - startTime);
 
         if (responseConfig.raw) {
-          return loggerService.makeResponse<T>(response as any);
+          return this.logger.makeResponse<T>(response);
         }
 
         return response.data;
       })
       .catch((error: AxiosError) => {
-        if (this.baseRequestConfig.debug) {
-          console.log('Error:', error);
-        }
-
-        if (this.baseRequestConfig.logger) {
-          loggerService.logRequestError(error as any);
-        }
+        this.logger.logError(error, Date.now() - startTime);
 
         if (responseConfig.raw) {
-          return loggerService.makeErrorResponse<T>(error as any);
+          return this.logger.makeErrorResponse<T>(error);
         }
 
         throw error.response?.data || error.response || new Error(error.message);
@@ -170,7 +164,9 @@ export class RequestDataSource<
       },
     });
 
-    return response.data?.[0] as Entity;
+    const data = response.data || [];
+
+    return data[0] as Entity;
   }
 
   get(id: number | string, config: SearchParams = {} as SearchParams) {
