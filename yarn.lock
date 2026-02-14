@@ -223,10 +223,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@iamnnort/config@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-1.1.9.tgz#57cda0da070a92848a2d164bce2f72eb31c018fe"
-  integrity sha512-3WtC958+7K+yd1mLar7CJhYm7RuNq+wpRG1DQ/mU0EtLT+eWlPjoxBrSWTd+r9fa8xqk0dX46bKwxxvYvPgqXQ==
+"@iamnnort/config@^1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-1.1.10.tgz#1e318eb3639053841f3b57590ac1b021a940c019"
+  integrity sha512-afdhZewOb5jJpc/WI+BwfxCbE0+DEnyM0Ywl4C5rSzGy2A/KD9MlR6h/sbyKo1gJesvPgVEBNrdklx8ta/8jZQ==
   dependencies:
     "@tsconfig/node22" "^22.0.5"
     "@typescript-eslint/parser" "^8.53.1"
