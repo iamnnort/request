@@ -13,44 +13,66 @@ yarn add @iamnnort/request
 ## Usage
 
 ```typescript
-import { LoggerLevels, RequestDataSource } from '@iamnnort/request';
+import { HttpMethods, LoggerLevels, RequestDataSource } from '@iamnnort/request';
 
-const dataSource = new RequestDataSource({
-  baseUrl: 'https://dummyjson.com',
-  url: '/todos',
-  logger: {
-    name: 'Todo Api',
-    level: LoggerLevels.DEBUG,
-  },
-});
+class TodoDataSource extends RequestDataSource {
+  constructor() {
+    super({
+      baseUrl: 'https://dummyjson.com',
+      url: '/todos',
+      logger: {
+        name: 'Todo Api',
+        level: LoggerLevels.INFO,
+      },
+    });
+  }
 
-// Search
-const todos = await dataSource.search({
-  params: {
-    page: 1,
-  },
-});
+  search() {
+    return this.common({
+      method: HttpMethods.GET,
+      params: {
+        limit: 10,
+      },
+    });
+  }
 
-// Get by id
-const todo = await dataSource.get(1);
+  get(id: number) {
+    return this.common({
+      method: HttpMethods.GET,
+      url: id,
+    });
+  }
 
-// Create
-const newTodo = await dataSource.create({
-  data: {
-    todo: 'Test todo',
-    completed: false,
-    userId: 1,
-  },
-});
+  create(data: { todo: string; completed: boolean; userId: number }) {
+    return this.common({
+      method: HttpMethods.POST,
+      url: '/add',
+      data,
+    });
+  }
 
-// Update
-const updatedTodo = await dataSource.update(1, {
-  data: {
-    completed: true,
-  },
-});
+  update(id: number, data: { completed: boolean }) {
+    return this.common({
+      method: HttpMethods.PUT,
+      url: id,
+      data,
+    });
+  }
 
-// Delete
+  remove(id: number) {
+    return this.common({
+      method: HttpMethods.DELETE,
+      url: id,
+    });
+  }
+}
+
+const dataSource = new TodoDataSource();
+
+await dataSource.search();
+await dataSource.get(1);
+await dataSource.create({ todo: 'Test todo', completed: false, userId: 1 });
+await dataSource.update(1, { completed: true });
 await dataSource.remove(1);
 ```
 
@@ -73,13 +95,17 @@ const dataSource = new RequestDataSource({
 
 Log levels: `trace`, `debug`, `info`, `warn`, `error`, `fatal`.
 
-Logs include the HTTP method, full URL with query parameters, request body, status code, and duration.
+Logs include the HTTP method, full URL with query parameters, status code, and duration. Request and response data is logged as structured objects.
 
 When the log level is `trace` or `debug`, response body data is also included in the output.
 
+Client errors (4xx) are logged as `warn`, server errors (5xx) as `error`.
+
 ```
-DEBUG (Todo Api): GET https://dummyjson.com/todos?page=1
-INFO (Todo Api): GET https://dummyjson.com/todos?page=1 200 OK (150ms)
+DEBUG (Todo Api): GET https://dummyjson.com/todos?limit=10
+INFO (Todo Api): GET https://dummyjson.com/todos?limit=10 200 OK (150ms)
+WARN (Todo Api): GET https://dummyjson.com/todos/999 400 Bad Request (100ms)
+ERROR (Todo Api): GET https://dummyjson.com/todos 500 Internal Server Error (200ms)
 ```
 
 ## Configuration

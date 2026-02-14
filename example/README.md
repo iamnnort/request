@@ -5,26 +5,53 @@ Minimal app that uses `@iamnnort/request` from the parent package. The dependenc
 ## Usage
 
 ```typescript
-import { RequestDataSource } from '@iamnnort/request';
+import { HttpMethods, LoggerLevels, RequestDataSource } from '@iamnnort/request';
 
 const main = async () => {
-  const dataSource = new RequestDataSource({
-    name: 'Todo Api',
-    baseUrl: 'https://dummyjson.com',
-    url: '/todos',
-  });
+  class DataSource extends RequestDataSource {
+    constructor() {
+      super({
+        baseUrl: 'https://httpbin.org',
+        logger: {
+          name: 'Api',
+          level: LoggerLevels.INFO,
+        },
+      });
+    }
 
-  await dataSource.search({
-    params: {
-      page: 1,
-    },
-  });
+    get() {
+      return this.common({
+        method: HttpMethods.GET,
+        url: '/status/200',
+      });
+    }
 
-  await dataSource.update(1, {
-    data: {
-      completed: false,
-    },
-  });
+    getParams() {
+      return this.common({
+        method: HttpMethods.GET,
+        url: '/get',
+        params: {
+          foo: 'bar',
+        },
+      });
+    }
+
+    postData() {
+      return this.common({
+        method: HttpMethods.POST,
+        url: '/post',
+        data: {
+          foo: 'bar',
+        },
+      });
+    }
+  }
+
+  const dataSource = new DataSource();
+
+  await dataSource.get();
+  await dataSource.getParams();
+  await dataSource.postData();
 };
 
 main();

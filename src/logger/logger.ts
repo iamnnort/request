@@ -1,6 +1,6 @@
 import pino from 'pino';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HttpMessageBuilder } from '@iamnnort/config/http';
+import { HttpMessageBuilder, HttpStatuses } from '@iamnnort/config/http';
 import { LoggerConfig, LoggerLevels } from './logger.types';
 
 export class Logger {
@@ -33,9 +33,17 @@ export class Logger {
       request,
     });
 
-    const message = messageBuilder.makeMethodText().makeUrlText().makeRequestDataText().build();
+    const message = messageBuilder.makeMethodText().makeUrlText().build();
 
-    this.logger.debug(message);
+    const data = {};
+
+    const requestData = messageBuilder.makeRequestDataObj();
+
+    if (Object.keys(requestData).length > 0) {
+      data['request'] = requestData;
+    }
+
+    this.logger.debug(data, message);
   }
 
   logResponse(response: AxiosResponse, duration: number) {
@@ -44,15 +52,27 @@ export class Logger {
       duration,
     });
 
-    messageBuilder.makeMethodText().makeUrlText().makeRequestDataText().makeStatusText();
+    messageBuilder.makeMethodText().makeUrlText().makeStatusText();
+
+    const data = {};
+
+    const requestData = messageBuilder.makeRequestDataObj();
+
+    if (Object.keys(requestData).length > 0) {
+      data['request'] = requestData;
+    }
 
     if ([LoggerLevels.TRACE, LoggerLevels.DEBUG].includes(this.config.level)) {
-      messageBuilder.makeResponseDataText();
+      const responseData = messageBuilder.makeResponseDataObj();
+
+      if (Object.keys(responseData).length > 0) {
+        data['response'] = responseData;
+      }
     }
 
     const message = messageBuilder.makeDurationText().build();
 
-    this.logger.info(message);
+    this.logger.info(data, message);
   }
 
   logError(request: AxiosRequestConfig, error: AxiosError, duration: number) {
@@ -62,15 +82,33 @@ export class Logger {
       duration,
     });
 
-    messageBuilder.makeMethodText().makeUrlText().makeRequestDataText().makeStatusText();
+    messageBuilder.makeMethodText().makeUrlText().makeStatusText();
+
+    const data = {};
+
+    const requestData = messageBuilder.makeRequestDataObj();
+
+    if (Object.keys(requestData).length > 0) {
+      data['request'] = requestData;
+    }
 
     if ([LoggerLevels.TRACE, LoggerLevels.DEBUG].includes(this.config.level)) {
-      messageBuilder.makeResponseDataText();
+      const responseData = messageBuilder.makeResponseDataObj();
+
+      if (Object.keys(responseData).length > 0) {
+        data['response'] = responseData;
+      }
     }
 
     const message = messageBuilder.makeDurationText().build();
 
-    this.logger.error(message);
+    const status = messageBuilder.makeStatus();
+
+    if (status >= HttpStatuses.INTERNAL_SERVER_ERROR) {
+      this.logger.error(data, message);
+    } else {
+      this.logger.warn(data, message);
+    }
   }
 
   makeResponse<T>(response: AxiosResponse) {
