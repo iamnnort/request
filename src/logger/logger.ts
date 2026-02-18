@@ -1,6 +1,6 @@
 import pino from 'pino';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { HttpMessageBuilder, HttpStatuses } from '@iamnnort/config/http';
+import { HttpMessageBuilder, HttpMessageFormatter, HttpStatuses } from '@iamnnort/config/http';
 import { LoggerConfig, LoggerLevels } from './logger.types';
 
 export class Logger {
@@ -15,17 +15,16 @@ export class Logger {
       ...config,
     };
 
-    this.logger = pino({
-      name: this.config.name,
-      level: this.config.level,
-      transport: {
-        target: 'pino-pretty',
-        options: {
-          colorize: false,
-          ignore: 'time,pid,hostname',
-        },
+    const formatter = new HttpMessageFormatter();
+
+    this.logger = pino(
+      {
+        name: this.config.name,
+        level: this.config.level,
+        timestamp: false,
       },
-    });
+      formatter.makeLogStream(),
+    );
   }
 
   logRequest(request: AxiosRequestConfig) {
