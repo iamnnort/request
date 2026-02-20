@@ -44,6 +44,7 @@ export class RequestDataSource<
       .makeMethod()
       .makeParams()
       .makeData()
+      .makeSignature()
       .makeSerializer()
       .build();
 

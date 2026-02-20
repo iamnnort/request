@@ -108,28 +108,54 @@ WARN (Todo Api): GET https://dummyjson.com/todos/999 400 Bad Request (100ms)
 ERROR (Todo Api): GET https://dummyjson.com/todos 500 Internal Server Error (200ms)
 ```
 
+## Signing
+
+Set the `signer` option to automatically sign outgoing requests with an HMAC signature.
+
+```typescript
+import { LoggerLevels, RequestDataSource } from '@iamnnort/request';
+
+const dataSource = new RequestDataSource({
+  baseUrl: 'https://api.example.com',
+  logger: {
+    name: 'Webhook Api',
+    level: LoggerLevels.INFO,
+  },
+  signer: {
+    secretKey: 'my-secret-key',
+  },
+});
+```
+
+When configured, every request with a body will include an `x-signature` header in the format `t={timestamp},v1={hmac}`, where the HMAC is computed as `SHA-256(secretKey, "{timestamp}.{body}")`.
+
+The header name defaults to `x-signature` and can be customized via `signer.header`.
+
 ## Configuration
 
 ### Base Config
 
-| Parameter              | Type                     | Description                                                        |
-| ---------------------- | ------------------------ | ------------------------------------------------------------------ |
-| `baseUrl`              | `string`                 | Main part of the server URL that will be used for the request      |
-| `url`                  | `string \| number`       | Server URL that will be used for the request                       |
-| `urlParts`             | `(string \| number)[]`   | Additional parts of URL that will be used for the request          |
-| `baseUrlName`          | `string`                 | Key to look up the base URL from `baseUrlMap`                      |
-| `baseUrlMap`           | `Record<string, string>` | Map of named base URLs                                             |
-| `headers`              | `object`                 | Custom headers to be sent                                          |
-| `auth`                 | `object`                 | HTTP Basic auth credentials                                        |
-| `bearerToken`          | `string`                 | Bearer token for Authorization header                              |
-| `apiKey`               | `string`                 | API key sent via `x-api-key` header                                |
-| `timeout`              | `number`                 | Request timeout in milliseconds                                    |
-| `responseType`         | `string`                 | Response type (e.g. `json`, `text`, `stream`)                      |
-| `logger`               | `object`                 | Logger configuration                                               |
-| `logger.name`          | `string`                 | Name used as the logger label                                      |
-| `logger.level`         | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)     |
-| `serializer`           | `object`                 | Config that allows you to customize serializing                    |
-| `serializer.arrayFormat` | `string`               | Array format (`indices`, `brackets`, `repeat`, `comma`)            |
+| Parameter                | Type                     | Description                                                        |
+| ------------------------ | ------------------------ | ------------------------------------------------------------------ |
+| `baseUrl`                | `string`                 | Main part of the server URL that will be used for the request      |
+| `url`                    | `string \| number`       | Server URL that will be used for the request                       |
+| `urlParts`               | `(string \| number)[]`   | Additional parts of URL that will be used for the request          |
+| `baseUrlName`            | `string`                 | Key to look up the base URL from `baseUrlMap`                      |
+| `baseUrlMap`             | `Record<string, string>` | Map of named base URLs                                             |
+| `headers`                | `object`                 | Custom headers to be sent                                          |
+| `auth`                   | `object`                 | HTTP Basic auth credentials                                        |
+| `bearerToken`            | `string`                 | Bearer token for Authorization header                              |
+| `apiKey`                 | `string`                 | API key sent via `x-api-key` header                                |
+| `timeout`                | `number`                 | Request timeout in milliseconds                                    |
+| `responseType`           | `string`                 | Response type (e.g. `json`, `text`, `stream`)                      |
+| `logger`                 | `object`                 | Logger configuration                                               |
+| `logger.name`            | `string`                 | Name used as the logger label                                      |
+| `logger.level`           | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)     |
+| `serializer`             | `object`                 | Config that allows you to customize serializing                    |
+| `serializer.arrayFormat` | `string`                 | Array format (`indices`, `brackets`, `repeat`, `comma`)            |
+| `signer`                 | `object`                 | Request signing configuration                                      |
+| `signer.secretKey`       | `string`                 | HMAC secret key for signing requests                               |
+| `signer.header`          | `string`                 | Header name for the signature (default: `x-signature`)             |
 
 ### Request Config
 

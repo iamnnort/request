@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import { HttpMethods, HttpStatuses, LoggerConfig } from './logger';
 import { SerializerConfig } from './serializer';
+import { SignerConfig } from './signer';
 
 export type RequestParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
 
@@ -29,6 +30,7 @@ export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 't
   apiKey?: string;
   serializer?: Partial<SerializerConfig>;
   logger?: Partial<LoggerConfig>;
+  signer?: Partial<SignerConfig>;
 };
 
 export type ResponseConfig = {

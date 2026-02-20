@@ -2,13 +2,17 @@ import { AxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
 import { HttpMethods } from '@iamnnort/config/http';
 import { BaseRequestConfig, RequestConfig } from './types';
-import { SerializerArrayFormats } from './serializer';
+import { Serializer } from './serializer';
+import { Signer } from './signer';
 
 export class RequestBuilder {
   baseRequestConfig: BaseRequestConfig;
   requestConfig: RequestConfig;
 
   config: AxiosRequestConfig;
+
+  signer: Signer;
+  serializer: Serializer;
 
   constructor(options: { baseRequestConfig: BaseRequestConfig; requestConfig: RequestConfig }) {
     this.baseRequestConfig = options.baseRequestConfig;
@@ -24,6 +28,9 @@ export class RequestBuilder {
         ...options.requestConfig.headers,
       },
     };
+
+    this.signer = new Signer(this.baseRequestConfig.signer);
+    this.serializer = new Serializer(this.baseRequestConfig.serializer);
   }
 
   makeContentType() {
@@ -181,17 +188,22 @@ export class RequestBuilder {
     return this;
   }
 
+  makeSignature() {
+    this.config = {
+      ...this.config,
+      headers: {
+        ...this.config.headers,
+        ...this.signer.getConfig(this.config.data),
+      },
+    };
+
+    return this;
+  }
+
   makeSerializer() {
     this.config = {
       ...this.config,
-      paramsSerializer: {
-        serialize: (params: any) => {
-          return stringify(params, {
-            arrayFormat: this.baseRequestConfig.serializer?.arrayFormat || SerializerArrayFormats.BRACKETS,
-            skipNulls: true,
-          });
-        },
-      },
+      paramsSerializer: this.serializer.getConfig(),
     };
 
     return this;

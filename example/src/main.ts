@@ -1,4 +1,5 @@
 import { HttpMethods, LoggerLevels, RequestDataSource } from '@iamnnort/request';
+import { startServer, stopServer } from './server';
 
 const main = async () => {
   class DataSource extends RequestDataSource {
@@ -41,6 +42,16 @@ const main = async () => {
       });
     }
 
+    postSignedData() {
+      return this.common({
+        method: HttpMethods.POST,
+        url: '/post',
+        data: {
+          foo: 'bar',
+        },
+      });
+    }
+
     getJson() {
       return this.common({
         method: HttpMethods.GET,
@@ -59,6 +70,33 @@ const main = async () => {
       return this.common({
         method: HttpMethods.GET,
         url: '/status/500',
+      });
+    }
+  }
+
+  const SECRET_KEY = 'my-secret-key';
+
+  class SignedDataSource extends RequestDataSource {
+    constructor() {
+      super({
+        baseUrl: `http://localhost:3000`,
+        logger: {
+          name: 'Signed Api',
+          level: LoggerLevels.INFO,
+        },
+        signer: {
+          secretKey: SECRET_KEY,
+        },
+      });
+    }
+
+    postData() {
+      return this.common({
+        method: HttpMethods.POST,
+        url: '/webhooks',
+        data: {
+          foo: 'bar',
+        },
       });
     }
   }
@@ -84,6 +122,14 @@ const main = async () => {
   } catch (error) {
     //
   }
+
+  const server = await startServer(SECRET_KEY);
+
+  const signedDataSource = new SignedDataSource();
+
+  await signedDataSource.postData();
+
+  await stopServer(server);
 };
 
 main();

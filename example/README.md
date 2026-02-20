@@ -2,60 +2,12 @@
 
 Minimal app that uses `@iamnnort/request` from the parent package. The dependency uses `link:..`, so after you rebuild the lib the example picks up changes automatically.
 
-## Usage
+The example demonstrates:
 
-```typescript
-import { HttpMethods, LoggerLevels, RequestDataSource } from '@iamnnort/request';
-
-const main = async () => {
-  class DataSource extends RequestDataSource {
-    constructor() {
-      super({
-        baseUrl: 'https://httpbin.org',
-        logger: {
-          name: 'Api',
-          level: LoggerLevels.INFO,
-        },
-      });
-    }
-
-    get() {
-      return this.common({
-        method: HttpMethods.GET,
-        url: '/status/200',
-      });
-    }
-
-    getParams() {
-      return this.common({
-        method: HttpMethods.GET,
-        url: '/get',
-        params: {
-          foo: 'bar',
-        },
-      });
-    }
-
-    postData() {
-      return this.common({
-        method: HttpMethods.POST,
-        url: '/post',
-        data: {
-          foo: 'bar',
-        },
-      });
-    }
-  }
-
-  const dataSource = new DataSource();
-
-  await dataSource.get();
-  await dataSource.getParams();
-  await dataSource.postData();
-};
-
-main();
-```
+- GET / POST requests via [httpbin.org](https://httpbin.org)
+- Structured logging with request/response data redaction
+- Client error (4xx) and server error (5xx) handling
+- HMAC request signing with a local Express server that validates the signature
 
 ## Run
 

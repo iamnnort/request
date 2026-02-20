@@ -6,9 +6,11 @@
     "start": "ts-node ./src/main.ts"
   },
   "dependencies": {
-    "@iamnnort/request": "link:.."
+    "@iamnnort/request": "link:..",
+    "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
