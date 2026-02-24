@@ -135,27 +135,27 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 
 ### Base Config
 
-| Parameter                | Type                     | Description                                                        |
-| ------------------------ | ------------------------ | ------------------------------------------------------------------ |
-| `baseUrl`                | `string`                 | Main part of the server URL that will be used for the request      |
-| `url`                    | `string \| number`       | Server URL that will be used for the request                       |
-| `urlParts`               | `(string \| number)[]`   | Additional parts of URL that will be used for the request          |
-| `baseUrlName`            | `string`                 | Key to look up the base URL from `baseUrlMap`                      |
-| `baseUrlMap`             | `Record<string, string>` | Map of named base URLs                                             |
-| `headers`                | `object`                 | Custom headers to be sent                                          |
-| `auth`                   | `object`                 | HTTP Basic auth credentials                                        |
-| `bearerToken`            | `string`                 | Bearer token for Authorization header                              |
-| `apiKey`                 | `string`                 | API key sent via `x-api-key` header                                |
-| `timeout`                | `number`                 | Request timeout in milliseconds                                    |
-| `responseType`           | `string`                 | Response type (e.g. `json`, `text`, `stream`)                      |
-| `logger`                 | `object`                 | Logger configuration                                               |
-| `logger.name`            | `string`                 | Name used as the logger label                                      |
-| `logger.level`           | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`)     |
-| `serializer`             | `object`                 | Config that allows you to customize serializing                    |
-| `serializer.arrayFormat` | `string`                 | Array format (`indices`, `brackets`, `repeat`, `comma`)            |
-| `signer`                 | `object`                 | Request signing configuration                                      |
-| `signer.secretKey`       | `string`                 | HMAC secret key for signing requests                               |
-| `signer.header`          | `string`                 | Header name for the signature (default: `x-signature`)             |
+| Parameter                | Type                     | Description                                                    |
+| ------------------------ | ------------------------ | -------------------------------------------------------------- |
+| `baseUrl`                | `string`                 | Main part of the server URL that will be used for the request  |
+| `url`                    | `string \| number`       | Server URL that will be used for the request                   |
+| `urlParts`               | `(string \| number)[]`   | Additional parts of URL that will be used for the request      |
+| `baseUrlName`            | `string`                 | Key to look up the base URL from `baseUrlMap`                  |
+| `baseUrlMap`             | `Record<string, string>` | Map of named base URLs                                         |
+| `headers`                | `object`                 | Custom headers to be sent                                      |
+| `auth`                   | `object`                 | HTTP Basic auth credentials                                    |
+| `bearerToken`            | `string`                 | Bearer token for Authorization header                          |
+| `apiKey`                 | `string`                 | API key sent via `x-api-key` header                            |
+| `timeout`                | `number`                 | Request timeout in milliseconds                                |
+| `responseType`           | `string`                 | Response type (e.g. `json`, `text`, `stream`)                  |
+| `logger`                 | `object`                 | Logger configuration                                           |
+| `logger.name`            | `string`                 | Name used as the logger label                                  |
+| `logger.level`           | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`) |
+| `serializer`             | `object`                 | Config that allows you to customize serializing                |
+| `serializer.arrayFormat` | `string`                 | Array format (`indices`, `brackets`, `repeat`, `comma`)        |
+| `signer`                 | `object`                 | Request signing configuration                                  |
+| `signer.secretKey`       | `string`                 | HMAC secret key for signing requests                           |
+| `signer.header`          | `string`                 | Header name for the signature (default: `x-signature`)         |
 
 ### Request Config
 
@@ -180,6 +180,7 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 | `update`     | `PUT`       | Update entity by id                        |
 | `bulkUpdate` | `PUT`       | Update multiple entities                   |
 | `remove`     | `DELETE`    | Remove entity by id                        |
+| `bulkRemove` | `DELETE`    | Remove multiple entities                   |
 | `common`     | any         | Execute a custom request                   |
 
 ## License

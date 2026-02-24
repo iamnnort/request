@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Request handler for Node.js - Fast - Interactive - Simple",
   "license": "MIT",
   "repository": {

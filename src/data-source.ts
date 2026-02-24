@@ -216,4 +216,12 @@ export class RequestDataSource<
       url: id,
     });
   }
+
+  bulkRemove(config: SearchParams = {} as SearchParams) {
+    return this.common<void[]>({
+      ...config,
+      method: HttpMethods.DELETE,
+      url: '/bulk',
+    });
+  }
 }
