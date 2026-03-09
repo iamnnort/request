@@ -223,17 +223,16 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@iamnnort/config@^1.1.16":
-  version "1.1.16"
-  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-1.1.16.tgz#1398d8afc63b4aea67349854f102ad1970d87126"
-  integrity sha512-TgbGHqZlCpbp3X3TrrFpowZpgR9IzNlbNvN2VsYF+OVNHGyvZ02TujRu+b4HK2W2Lks1ohbEgHXED/qWXRjpSg==
+"@iamnnort/config@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-1.2.2.tgz#c7bb086d3639676093ba929ef1b91ad063f1c085"
+  integrity sha512-JPGYGFfuuk2xRgFCFBgayTZU/2BmziMzrGSXmoe3j5gmpEJ9SpuWUizFQki1aO9Md3zTwjOuzMvwsMAVOnxL8A==
   dependencies:
     "@tsconfig/node22" "^22.0.5"
     "@typescript-eslint/parser" "^8.53.1"
     axios "^1.13.5"
     dotenv "^17.2.3"
     esbuild-plugin-copy "^2.1.1"
-    esbuild-plugin-tsc "^0.5.0"
     eslint "^9.39.2"
     eslint-config-prettier "^10.1.8"
     jiti "^2.6.1"
@@ -1058,13 +1057,6 @@ esbuild-plugin-copy@^2.1.1:
     chokidar "^3.5.3"
     fs-extra "^10.0.1"
     globby "^11.0.3"
-
-esbuild-plugin-tsc@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/esbuild-plugin-tsc/-/esbuild-plugin-tsc-0.5.0.tgz#55c14599c620c0a2a57d0fe6827f397477be17a7"
-  integrity sha512-t9j90NnMhAGWzS0SKX3zNa/XeWcUanqKaFe36CSmXiB2nYFdaSzKY9pBZTvGV7NGImxE1BktOOlVpQyYnUTVGg==
-  dependencies:
-    strip-comments "^2.0.1"
 
 esbuild@^0.27.0:
   version "0.27.3"
@@ -2287,11 +2279,6 @@ strip-ansi@^7.0.1, strip-ansi@^7.1.0:
   integrity sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==
   dependencies:
     ansi-regex "^6.0.1"
-
-strip-comments@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/strip-comments/-/strip-comments-2.0.1.tgz#4ad11c3fbcac177a67a40ac224ca339ca1c1ba9b"
-  integrity sha512-ZprKx+bBLXv067WTCALv8SSz5l2+XhpYCsVtSqlMnkAXMWDq+/ekVbl1ghqP9rUHTzv6sm/DwCOiYutU/yp1fw==
 
 strip-final-newline@^3.0.0:
   version "3.0.0"
