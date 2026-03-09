@@ -1,7 +1,7 @@
 import pino from 'pino';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpMessageBuilder, HttpMessageFormatter, HttpStatuses } from '@iamnnort/config/http';
-import { LoggerConfig, LoggerLevels, LoggerOutputs } from './logger.types';
+import { LoggerConfig, LoggerLevels } from './logger.types';
 
 export class Logger {
   private logger: pino.Logger;
@@ -12,7 +12,6 @@ export class Logger {
     this.config = {
       name: '',
       level: LoggerLevels.INFO,
-      output: LoggerOutputs.MESSAGE,
       ...config,
     };
 
@@ -24,7 +23,7 @@ export class Logger {
         level: this.config.level,
         timestamp: false,
       },
-      this.config.output === LoggerOutputs.DATA ? formatter.makeLambdaLogStream() : formatter.makeLogStream(),
+      formatter.makeLogStream(),
     );
   }
 
