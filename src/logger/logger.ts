@@ -27,6 +27,30 @@ export class Logger {
     );
   }
 
+  trace(message: string | object) {
+    this.logger.trace(message);
+  }
+
+  debug(message: string | object) {
+    this.logger.debug(message);
+  }
+
+  info(message: string | object) {
+    this.logger.info(message);
+  }
+
+  warn(message: string | object) {
+    this.logger.warn(message);
+  }
+
+  error(message: string | object) {
+    this.logger.error(message);
+  }
+
+  fatal(message: string | object) {
+    this.logger.fatal(message);
+  }
+
   logRequest(request: AxiosRequestConfig) {
     const messageBuilder = new HttpMessageBuilder({
       request,

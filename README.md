@@ -10,6 +10,10 @@ npm install @iamnnort/request
 yarn add @iamnnort/request
 ```
 
+## Requirements
+
+- **Node.js** ≥ 24
+
 ## Usage
 
 ```typescript

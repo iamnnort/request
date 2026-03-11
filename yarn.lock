@@ -223,12 +223,12 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@iamnnort/config@^1.2.3":
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-1.2.3.tgz#013c0bdb5fbda5b99db91e1d27af130fb7e6d25f"
-  integrity sha512-qdnUjMnq+mXEQgxY7dRra0J0qSLQEf1KLoYv/nGCza9WH3FwQXcaR8V3fxOB1jZhEuxaoqkAzBpghEX77se7BA==
+"@iamnnort/config@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@iamnnort/config/-/config-2.0.2.tgz#67a29433cf71fa665f71309a248d40468ead63d7"
+  integrity sha512-JLpFlaMHhYQnzT+5MviCtcuri1DxNFs5jNB5heQIUF0BS9/NNSavGreu38TMQGAD7mIIa6IS8pDjpY3qYILxAg==
   dependencies:
-    "@tsconfig/node22" "^22.0.5"
+    "@tsconfig/node24" "^24.0.4"
     "@typescript-eslint/parser" "^8.53.1"
     axios "^1.13.5"
     dotenv "^17.2.3"
@@ -526,10 +526,10 @@
   dependencies:
     "@swc/counter" "^0.1.3"
 
-"@tsconfig/node22@^22.0.5":
-  version "22.0.5"
-  resolved "https://registry.yarnpkg.com/@tsconfig/node22/-/node22-22.0.5.tgz#56be9f34ccffd3aa85f9cc7365ad9765d5829adb"
-  integrity sha512-hLf2ld+sYN/BtOJjHUWOk568dvjFQkHnLNa6zce25GIH+vxKfvTgm3qpaH6ToF5tu/NN0IH66s+Bb5wElHrLcw==
+"@tsconfig/node24@^24.0.4":
+  version "24.0.4"
+  resolved "https://registry.yarnpkg.com/@tsconfig/node24/-/node24-24.0.4.tgz#ae50cc6b3288c1010454f0ec4659b47b520ca1b1"
+  integrity sha512-2A933l5P5oCbv6qSxHs7ckKwobs8BDAe9SJ/Xr2Hy+nDlwmLE1GhFh/g/vXGRZWgxBg9nX/5piDtHR9Dkw/XuA==
 
 "@types/estree@1.0.8":
   version "1.0.8"
