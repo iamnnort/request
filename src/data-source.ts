@@ -91,7 +91,7 @@ export class RequestDataSource<
     };
 
     const limitDto = {
-      maxPage: bulkSize && paginationDto.page - 1 + bulkSize,
+      maxPage: bulkSize ? paginationDto.page - 1 + bulkSize : Infinity,
       maxAttempts: responseConfig.maxAttempts || 1,
     };
 
@@ -138,17 +138,13 @@ export class RequestDataSource<
     for (;;) {
       const response = await request();
 
-      if (!response) {
+      if (!response?.data?.length || !response.pagination) {
         return;
       }
 
       const { data, pagination } = response;
 
-      if (data.length < 1) {
-        return;
-      }
-
-      yield responseConfig.raw ? response : response.data;
+      yield responseConfig.raw ? response : data;
 
       paginationDto.page += 1;
 
