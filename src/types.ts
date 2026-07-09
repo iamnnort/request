@@ -35,7 +35,19 @@ export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 't
 
 export type ResponseConfig = {
   raw?: boolean;
-  bulkCallback?: (page: number) => Promise<void>;
+  maxAttempts?: number;
+  bulkCallback?: (nextPage: number) => void | Promise<void>;
+  errorCallback?: (error: unknown, config: ResponseConfigError) => void | Promise<void>;
+  retryErrorCallback?: (error: unknown, config: ResponseConfigRetryError) => void | Promise<void>;
+};
+
+export type ResponseConfigError = {
+  page: number;
+};
+
+export type ResponseConfigRetryError = ResponseConfigError & {
+  attempt: number;
+  attemptDelay: number;
 };
 
 export type Response<T = unknown> = {

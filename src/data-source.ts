@@ -4,6 +4,7 @@ import { RequestBuilder } from './builder';
 import { Logger } from './logger/logger';
 import { BaseRequestConfig, RequestConfig, RequestConfigParams, ResponseConfig, RawResponse } from './types';
 import { PaginationResponse } from './pagination';
+import { RequestHelper } from './helper';
 
 export class RequestDataSource<
   Entity extends Record<string, any> = any,
@@ -78,9 +79,7 @@ export class RequestDataSource<
 
   bulkCommon<T>(
     requestConfig: RequestConfig,
-    responseConfig: ResponseConfig & {
-      raw: true;
-    },
+    responseConfig: ResponseConfig & { raw: true },
   ): AsyncGenerator<PaginationResponse<T>>;
 
   async *bulkCommon<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
@@ -91,44 +90,78 @@ export class RequestDataSource<
       pageSize: pageSize || 30,
     };
 
-    const maxPage = bulkSize ? paginationDto.page - 1 + bulkSize : null;
-
-    let pagination = {
-      total: 0,
-      currentPage: 0,
-      lastPage: 0,
-      from: 0,
-      to: 0,
-      pageSize: 0,
+    const limitDto = {
+      maxPage: bulkSize && paginationDto.page - 1 + bulkSize,
+      maxAttempts: responseConfig.maxAttempts || 1,
     };
 
-    do {
-      const response = await this.common<PaginationResponse<T>>({
-        ...requestConfig,
-        params: {
-          ...paginationDto,
-          ...searchDto,
-        },
-      });
+    const request = async () => {
+      for (let attempt = 1; attempt <= limitDto.maxAttempts; attempt += 1) {
+        try {
+          const response = await this.common<PaginationResponse<T>>({
+            ...requestConfig,
+            params: {
+              ...paginationDto,
+              ...searchDto,
+            },
+          });
 
-      pagination = response.pagination;
+          return response;
+        } catch (e) {
+          if (attempt >= limitDto.maxAttempts) {
+            if (responseConfig.errorCallback) {
+              await responseConfig.errorCallback(e, {
+                page: paginationDto.page,
+              });
 
-      if (!response.data?.length) {
+              return;
+            }
+
+            throw e;
+          }
+
+          const { attemptDelay, attemptSleep } = RequestHelper.getBackoffSleep(attempt);
+
+          if (responseConfig.retryErrorCallback) {
+            await responseConfig.retryErrorCallback(e, {
+              page: paginationDto.page,
+              attempt,
+              attemptDelay,
+            });
+          }
+
+          await attemptSleep();
+        }
+      }
+    };
+
+    for (;;) {
+      const response = await request();
+
+      if (!response) {
         return;
       }
 
-      if (responseConfig.raw) {
-        yield response;
-      } else {
-        yield response.data;
+      const { data, pagination } = response;
+
+      if (data.length < 1) {
+        return;
       }
 
-      paginationDto.page += 1;
-    } while (pagination.currentPage !== pagination.lastPage && pagination.currentPage !== maxPage);
+      yield responseConfig.raw ? response : response.data;
 
-    if (pagination.currentPage !== pagination.lastPage) {
-      if (responseConfig.bulkCallback) {
-        await responseConfig.bulkCallback(paginationDto.page);
+      paginationDto.page += 1;
+
+      if (pagination.currentPage >= pagination.lastPage) {
+        return;
+      }
+
+      if (pagination.currentPage >= limitDto.maxPage) {
+        if (responseConfig.bulkCallback) {
+          await responseConfig.bulkCallback(paginationDto.page);
+        }
+
+        return;
       }
     }
   }
