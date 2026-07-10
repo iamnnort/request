@@ -10,7 +10,7 @@ export class RequestHelper {
     const seconds = base / 2 + (Math.random() * base) / 2;
 
     return {
-      attemptDelay: seconds,
+      attemptDelay: parseFloat(seconds.toFixed(2)),
       attemptSleep: () => this.sleep(seconds),
     };
   }
@@ -23,8 +23,8 @@ export class RequestHelper {
       const seconds = Math.max(0, minSeconds - durationSec);
 
       return {
-        loopDuration: durationSec,
-        loopDelay: seconds,
+        loopDuration: parseFloat(durationSec.toFixed(2)),
+        loopDelay: parseFloat(seconds.toFixed(2)),
         loopSleep: () => this.sleep(seconds),
       };
     };
