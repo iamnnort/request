@@ -14,4 +14,19 @@ export class RequestHelper {
       attemptSleep: () => this.sleep(seconds),
     };
   }
+
+  static startLoopSleep(minSeconds = 1) {
+    const startMs = Date.now();
+
+    return () => {
+      const durationSec = (Date.now() - startMs) / 1000;
+      const seconds = Math.max(0, minSeconds - durationSec);
+
+      return {
+        loopDuration: durationSec,
+        loopDelay: seconds,
+        loopSleep: () => this.sleep(seconds),
+      };
+    };
+  }
 }
