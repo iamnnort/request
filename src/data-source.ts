@@ -83,7 +83,7 @@ export class RequestDataSource<
   ): AsyncGenerator<PaginationResponse<T>>;
 
   async *bulkCommon<T>(requestConfig: RequestConfig, responseConfig: ResponseConfig = {}) {
-    const { page, pageSize, bulkSize, ...searchDto } = requestConfig.params || {};
+    const { page, pageSize, bulkSize, unpaged, ...searchDto } = requestConfig.params || {};
 
     const paginationDto = {
       page: page || 1,
@@ -148,11 +148,11 @@ export class RequestDataSource<
 
       paginationDto.page += 1;
 
-      if (pagination.currentPage >= pagination.lastPage) {
+      if (!unpaged && pagination.currentPage >= pagination.lastPage) {
         return;
       }
 
-      if (pagination.currentPage >= limitDto.maxPage) {
+      if (!unpaged && pagination.currentPage >= limitDto.maxPage) {
         if (responseConfig.bulkCallback) {
           await responseConfig.bulkCallback(paginationDto.page);
         }
