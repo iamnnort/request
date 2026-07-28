@@ -88,6 +88,7 @@ export class RequestDataSource<
     const paginationDto = {
       page: page || 1,
       pageSize: pageSize || 30,
+      unpaged,
     };
 
     const limitDto = {
@@ -148,11 +149,11 @@ export class RequestDataSource<
 
       paginationDto.page += 1;
 
-      if (!unpaged && pagination.currentPage >= pagination.lastPage) {
+      if (!paginationDto.unpaged && pagination.currentPage >= pagination.lastPage) {
         return;
       }
 
-      if (!unpaged && pagination.currentPage >= limitDto.maxPage) {
+      if (!paginationDto.unpaged && pagination.currentPage >= limitDto.maxPage) {
         if (responseConfig.bulkCallback) {
           await responseConfig.bulkCallback(paginationDto.page);
         }
