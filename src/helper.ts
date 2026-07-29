@@ -29,4 +29,16 @@ export class RequestHelper {
       };
     };
   }
+
+  static startExecution() {
+    const startMs = Date.now();
+
+    return () => {
+      const durationSec = (Date.now() - startMs) / 1000;
+
+      return {
+        executionDuration: parseFloat(durationSec.toFixed(2)),
+      };
+    };
+  }
 }
