@@ -5,7 +5,9 @@ import { SignerConfig } from './signer';
 
 export type RequestParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
 
-export type RequestConfigParams = Pick<AxiosRequestConfig, 'params' | 'data'>;
+export type RequestConfigParams = Pick<AxiosRequestConfig, 'params' | 'data'> & {
+  scopes?: string[];
+};
 
 export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL' | 'url'> & {
   baseUrl?: string;
@@ -13,6 +15,7 @@ export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL' | 'url'> & {
   baseUrlMap?: Record<string, string>;
   url?: number | string;
   urlParts?: (number | string)[];
+  scopes?: string[];
   bearerToken?: string;
   apiKey?: string;
   urlencoded?: boolean;
@@ -26,6 +29,7 @@ export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 't
   baseUrlMap?: Record<string, string>;
   url?: number | string;
   urlParts?: (number | string)[];
+  scopes?: string[];
   bearerToken?: string;
   apiKey?: string;
   serializer?: Partial<SerializerConfig>;

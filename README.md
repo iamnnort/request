@@ -144,6 +144,7 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 | `baseUrl`                | `string`                 | Main part of the server URL that will be used for the request  |
 | `url`                    | `string \| number`       | Server URL that will be used for the request                   |
 | `urlParts`               | `(string \| number)[]`   | Additional parts of URL that will be used for the request      |
+| `scopes`                 | `string[]`               | Scopes sent as a `scopes` query parameter with every request   |
 | `baseUrlName`            | `string`                 | Key to look up the base URL from `baseUrlMap`                  |
 | `baseUrlMap`             | `Record<string, string>` | Map of named base URLs                                         |
 | `headers`                | `object`                 | Custom headers to be sent                                      |
@@ -163,13 +164,15 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 
 ### Request Config
 
-| Parameter    | Type      | Description                                      |
-| ------------ | --------- | ------------------------------------------------ |
-| `params`     | `object`  | URL parameters to be sent with the request       |
-| `data`       | `object`  | Data to be sent as the request body              |
-| `urlencoded` | `boolean` | Send data as `application/x-www-form-urlencoded` |
-| `multipart`  | `boolean` | Send data as `multipart/form-data`               |
-| `xml`        | `boolean` | Send data as `text/xml`                          |
+| Parameter       | Type       | Description                                      |
+| --------------- | ---------- | ------------------------------------------------ |
+| `params`        | `object`   | URL parameters to be sent with the request       |
+| `data`          | `object`   | Data to be sent as the request body              |
+| `scopes`        | `string[]` | Scopes appended to the base config scopes        |
+| `params.scopes` | `string[]` | Scopes appended after the config scopes          |
+| `urlencoded`    | `boolean`  | Send data as `application/x-www-form-urlencoded` |
+| `multipart`     | `boolean`  | Send data as `multipart/form-data`               |
+| `xml`           | `boolean`  | Send data as `text/xml`                          |
 
 ## Methods
 

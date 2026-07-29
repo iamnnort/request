@@ -185,6 +185,24 @@ export class RequestBuilder {
       params: this.requestConfig.params,
     };
 
+    const scopes = [
+      ...new Set([
+        ...(this.baseRequestConfig.scopes || []),
+        ...(this.requestConfig.scopes || []),
+        ...(this.requestConfig.params?.scopes || []),
+      ]),
+    ];
+
+    if (scopes.length) {
+      this.config = {
+        ...this.config,
+        params: {
+          ...this.config.params,
+          scopes,
+        },
+      };
+    }
+
     return this;
   }
 
