@@ -1,4 +1,6 @@
-import { createHmac } from 'crypto';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha256 } from '@noble/hashes/sha2.js';
+import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js';
 import { SignerConfig } from './signer.types';
 
 export class Signer {
@@ -16,7 +18,7 @@ export class Signer {
     const timestamp = Math.floor(Date.now() / 1000);
     const payload = `${timestamp}.${rawBody}`;
 
-    const signature = createHmac('sha256', this.config.secretKey).update(payload, 'utf8').digest('hex');
+    const signature = bytesToHex(hmac(sha256, utf8ToBytes(this.config.secretKey), utf8ToBytes(payload)));
 
     return `t=${timestamp},v1=${signature}`;
   }

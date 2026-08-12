@@ -190,6 +190,41 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 | `bulkRemove` | `DELETE`    | Remove multiple entities                   |
 | `common`     | any         | Execute a custom request                   |
 
+### Method picking
+
+Use `pickRequestDataSource` to expose only specific methods on a data source. Methods that are not listed become compile-time errors.
+
+```typescript
+import { pickRequestDataSource } from '@iamnnort/request';
+
+class ClientDataSource extends pickRequestDataSource<'create' | 'search', Client>() {
+  constructor() {
+    super({
+      baseUrl: 'https://api.example.com',
+      url: '/clients',
+    });
+  }
+}
+
+const dataSource = new ClientDataSource();
+
+await dataSource.create({ data: { name: 'Test client' } });
+await dataSource.search();
+
+await dataSource.update(1, { data: { name: 'Test client' } }); // compile-time error
+await dataSource.remove(1); // compile-time error
+```
+
+Generic parameters — `Methods`, then the same parameters as `RequestDataSource`: `Entity`, `SearchParams`, `SearchResponse`, `CreateParams`, `UpdateParams`.
+
+`Methods` defaults to all methods — `pickRequestDataSource()` exposes the full `RequestDataSource` API. Pass `never` to expose no methods at all:
+
+```typescript
+class FullDataSource extends pickRequestDataSource() {} // all methods
+
+class EmptyDataSource extends pickRequestDataSource<never>() {} // no methods
+```
+
 ## License
 
 MIT © [Nikita Pavets](https://github.com/iamnnort)

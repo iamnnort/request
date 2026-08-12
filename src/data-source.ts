@@ -255,3 +255,16 @@ export class RequestDataSource<
     });
   }
 }
+
+export function pickRequestDataSource<
+  Methods extends keyof RequestDataSource = keyof RequestDataSource,
+  Entity extends Record<string, any> = any,
+  SearchParams extends RequestConfigParams = any,
+  SearchResponse extends Record<string, any> = any,
+  CreateParams extends RequestConfigParams = any,
+  UpdateParams extends RequestConfigParams = any,
+>() {
+  return RequestDataSource as new (
+    baseRequestConfig: BaseRequestConfig,
+  ) => Pick<RequestDataSource<Entity, SearchParams, SearchResponse, CreateParams, UpdateParams>, Methods>;
+}

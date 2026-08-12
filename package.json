@@ -1,7 +1,7 @@
 {
   "name": "@iamnnort/request",
-  "version": "3.1.6",
-  "description": "Request handler for Node.js - Fast - Interactive - Simple",
+  "version": "3.2.1",
+  "description": "Request handler for Node.js and browsers - Fast - Interactive - Simple",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -21,7 +21,21 @@
     "dist"
   ],
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
   "engines": {
     "node": ">=24.0.0"
   },
@@ -36,6 +50,7 @@
   },
   "dependencies": {
     "@iamnnort/config": "^2.0.2",
+    "@noble/hashes": "^2.3.0",
     "axios": "^1.13.5",
     "pino": "^9.6.0",
     "qs": "^6.13.0"
