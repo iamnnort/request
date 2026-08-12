@@ -11,6 +11,7 @@ export type Pagination = {
   lastPage: number;
   from: number;
   to: number;
+  pageCursor: string | number | null;
   pageSize: number;
 };
 
