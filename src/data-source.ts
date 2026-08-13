@@ -89,6 +89,7 @@ export class RequestDataSource<
       page: page || 1,
       pageSize: pageSize || 30,
       unpaged,
+      pageCursor: null as string | number | null,
     };
 
     const limitDto = {
@@ -148,8 +149,12 @@ export class RequestDataSource<
       yield responseConfig.raw ? response : data;
 
       paginationDto.page += 1;
+      paginationDto.pageCursor = pagination.pageCursor;
 
-      if (!paginationDto.unpaged && pagination.currentPage >= pagination.lastPage) {
+      const hasMoreUnpaged = paginationDto.unpaged && pagination.pageCursor !== null;
+      const hasMorePaged = !paginationDto.unpaged && pagination.currentPage < pagination.lastPage;
+
+      if (!hasMoreUnpaged && !hasMorePaged) {
         return;
       }
 
