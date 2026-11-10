@@ -175,6 +175,7 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 | `urlencoded`     | `boolean`  | Send data as `application/x-www-form-urlencoded`             |
 | `multipart`      | `boolean`  | Send data as `multipart/form-data`                           |
 | `xml`            | `boolean`  | Send data as `text/xml`                                      |
+| `xmlResponse`    | `boolean`  | Parse an XML response body into an object                    |
 | `redactedValues` | `string[]` | Values replaced with `[redacted]` in the log of this request |
 
 ## Methods

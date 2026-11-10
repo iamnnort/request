@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { stringify } from 'qs';
+import { XMLParser } from 'fast-xml-parser';
 import { HttpMethods } from '@iamnnort/config/http';
 import { BaseRequestConfig, RequestConfig } from './types';
 import { Serializer } from './serializer';
@@ -222,6 +223,37 @@ export class RequestBuilder {
     this.config = {
       ...this.config,
       paramsSerializer: this.serializer.getConfig(),
+    };
+
+    return this;
+  }
+
+  makeResponseParser() {
+    if (!this.requestConfig.xmlResponse) {
+      return this;
+    }
+
+    const parser = new XMLParser({
+      parseTagValue: false,
+      ignoreDeclaration: true,
+    });
+
+    this.config = {
+      ...this.config,
+      headers: {
+        ...this.config.headers,
+        Accept: 'application/xml, text/xml',
+      },
+      responseType: 'text',
+      transformResponse: [
+        (data: unknown) => {
+          if (typeof data !== 'string' || !data.trim()) {
+            return data;
+          }
+
+          return parser.parse(data);
+        },
+      ],
     };
 
     return this;

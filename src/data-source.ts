@@ -47,6 +47,7 @@ export class RequestDataSource<
       .makeData()
       .makeSignature()
       .makeSerializer()
+      .makeResponseParser()
       .build();
 
     this.logger.logRequest(request, { redactedValues: requestConfig.redactedValues });
