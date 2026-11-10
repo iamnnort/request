@@ -21,6 +21,7 @@ export type RequestConfig = Omit<AxiosRequestConfig, 'baseURL' | 'url'> & {
   urlencoded?: boolean;
   multipart?: boolean;
   xml?: boolean;
+  redactedValues?: string[];
 };
 
 export type BaseRequestConfig = Pick<AxiosRequestConfig, 'auth' | 'headers' | 'timeout' | 'responseType'> & {

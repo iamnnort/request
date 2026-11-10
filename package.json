@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "description": "Request handler for Node.js and browsers - Fast - Interactive - Simple",
   "license": "MIT",
   "repository": {
@@ -49,7 +49,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@iamnnort/config": "^2.0.2",
+    "@iamnnort/config": "^2.1.0",
     "@noble/hashes": "^2.3.0",
     "axios": "^1.13.5",
     "pino": "^9.6.0",

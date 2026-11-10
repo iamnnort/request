@@ -49,14 +49,17 @@ export class RequestDataSource<
       .makeSerializer()
       .build();
 
-    this.logger.logRequest(request);
+    this.logger.logRequest(request, { redactedValues: requestConfig.redactedValues });
 
     const startTime = Date.now();
 
     return axios
       .request(request)
       .then((response: AxiosResponse<T>) => {
-        this.logger.logResponse(response, Date.now() - startTime);
+        this.logger.logResponse(response, {
+          duration: Date.now() - startTime,
+          redactedValues: requestConfig.redactedValues,
+        });
 
         if (responseConfig.raw) {
           return this.logger.makeResponse<T>(response);
@@ -65,7 +68,10 @@ export class RequestDataSource<
         return response.data;
       })
       .catch((error: AxiosError) => {
-        this.logger.logError(request, error, Date.now() - startTime);
+        this.logger.logError(request, error, {
+          duration: Date.now() - startTime,
+          redactedValues: requestConfig.redactedValues,
+        });
 
         if (responseConfig.raw) {
           return this.logger.makeErrorResponse<T>(error);

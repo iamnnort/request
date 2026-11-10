@@ -1,7 +1,7 @@
 import pino from 'pino';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpMessageBuilder, HttpMessageFormatter, HttpStatuses } from '@iamnnort/config/http';
-import { LoggerConfig, LoggerLevels } from './logger.types';
+import { LoggerConfig, LoggerLevels, LoggerLogConfig } from './logger.types';
 
 export class Logger {
   private logger: pino.Logger;
@@ -12,6 +12,8 @@ export class Logger {
     this.config = {
       name: '',
       level: LoggerLevels.INFO,
+      redactedKeys: [],
+      redactedValues: [],
       ...config,
     };
 
@@ -51,9 +53,11 @@ export class Logger {
     this.logger.fatal(message);
   }
 
-  logRequest(request: AxiosRequestConfig) {
+  logRequest(request: AxiosRequestConfig, config: LoggerLogConfig = {}) {
     const messageBuilder = new HttpMessageBuilder({
       request,
+      redactedKeys: this.config.redactedKeys,
+      redactedValues: [...this.config.redactedValues, ...(config.redactedValues || [])],
     });
 
     const message = messageBuilder.makeMethodText().makeUrlText().build();
@@ -69,10 +73,12 @@ export class Logger {
     this.logger.debug(data, message);
   }
 
-  logResponse(response: AxiosResponse, duration: number) {
+  logResponse(response: AxiosResponse, config: LoggerLogConfig = {}) {
     const messageBuilder = new HttpMessageBuilder({
       response,
-      duration,
+      duration: config.duration,
+      redactedKeys: this.config.redactedKeys,
+      redactedValues: [...this.config.redactedValues, ...(config.redactedValues || [])],
     });
 
     messageBuilder.makeMethodText().makeUrlText().makeStatusText();
@@ -98,11 +104,13 @@ export class Logger {
     this.logger.info(data, message);
   }
 
-  logError(request: AxiosRequestConfig, error: AxiosError, duration: number) {
+  logError(request: AxiosRequestConfig, error: AxiosError, config: LoggerLogConfig = {}) {
     const messageBuilder = new HttpMessageBuilder({
       request,
       error,
-      duration,
+      duration: config.duration,
+      redactedKeys: this.config.redactedKeys,
+      redactedValues: [...this.config.redactedValues, ...(config.redactedValues || [])],
     });
 
     messageBuilder.makeMethodText().makeUrlText().makeStatusText();

@@ -156,6 +156,8 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 | `logger`                 | `object`                 | Logger configuration                                           |
 | `logger.name`            | `string`                 | Name used as the logger label                                  |
 | `logger.level`           | `string`                 | Log level (`trace`, `debug`, `info`, `warn`, `error`, `fatal`) |
+| `logger.redactedKeys`    | `string[]`               | Extra field names redacted in body and query                   |
+| `logger.redactedValues`  | `string[]`               | Values replaced with `[redacted]` in log output                |
 | `serializer`             | `object`                 | Config that allows you to customize serializing                |
 | `serializer.arrayFormat` | `string`                 | Array format (`indices`, `brackets`, `repeat`, `comma`)        |
 | `signer`                 | `object`                 | Request signing configuration                                  |
@@ -164,15 +166,16 @@ The header name defaults to `x-signature` and can be customized via `signer.head
 
 ### Request Config
 
-| Parameter       | Type       | Description                                      |
-| --------------- | ---------- | ------------------------------------------------ |
-| `params`        | `object`   | URL parameters to be sent with the request       |
-| `data`          | `object`   | Data to be sent as the request body              |
-| `scopes`        | `string[]` | Scopes appended to the base config scopes        |
-| `params.scopes` | `string[]` | Scopes appended after the config scopes          |
-| `urlencoded`    | `boolean`  | Send data as `application/x-www-form-urlencoded` |
-| `multipart`     | `boolean`  | Send data as `multipart/form-data`               |
-| `xml`           | `boolean`  | Send data as `text/xml`                          |
+| Parameter        | Type       | Description                                                  |
+| ---------------- | ---------- | ------------------------------------------------------------ |
+| `params`         | `object`   | URL parameters to be sent with the request                   |
+| `data`           | `object`   | Data to be sent as the request body                          |
+| `scopes`         | `string[]` | Scopes appended to the base config scopes                    |
+| `params.scopes`  | `string[]` | Scopes appended after the config scopes                      |
+| `urlencoded`     | `boolean`  | Send data as `application/x-www-form-urlencoded`             |
+| `multipart`      | `boolean`  | Send data as `multipart/form-data`                           |
+| `xml`            | `boolean`  | Send data as `text/xml`                                      |
+| `redactedValues` | `string[]` | Values replaced with `[redacted]` in the log of this request |
 
 ## Methods
 
