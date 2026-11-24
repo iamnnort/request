@@ -1,6 +1,6 @@
 {
   "name": "@iamnnort/request",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Request handler for Node.js and browsers - Fast - Interactive - Simple",
   "license": "MIT",
   "repository": {
@@ -49,7 +49,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@iamnnort/config": "^2.1.0",
+    "@iamnnort/config": "^2.1.1",
     "@noble/hashes": "^2.3.0",
     "axios": "^1.13.5",
     "fast-xml-parser": "~5.11.2",
